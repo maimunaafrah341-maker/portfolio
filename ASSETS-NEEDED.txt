@@ -1,0 +1,31 @@
+MAIMUNA PORTFOLIO — ASSETS NEEDED
+
+The original Manus ZIP did not contain the artwork files themselves. The website referenced them through Manus storage.
+
+Copy/export these files from your Manus project into:
+    client/public/images/
+
+Use these exact filenames:
+
+1. green-beauty-feature_28e80733.jpeg
+2. nostalgia-feature_2700804a.jpeg
+3. beauty-in-death-feature_036b55e1.jpeg
+4. modesty-butterflies_adaaaf32.jpeg
+5. kaaba-linework_6e9be886.jpeg
+6. dome-of-rock-acrylic_84f43c37.jpeg
+7. cest-la-vie-watercolor_17953cb2.jpeg
+8. beauty-in-tears-watercolor_327424e0.jpeg
+9. green-beauty-original_36769f99.jpeg
+10. sunflower-watercolor_4e02bed1.jpeg
+11. jab-we-met-fanart_dcfb40be.jpeg
+12. tokyo-ghoul-fanart_261e3391.jpeg
+13. blue-song-illustration_924827c4.jpeg
+14. gallery-flowers_59ebe445.jpeg
+15. warrior-pencil_adbeeb6f.jpeg
+16. maimuna-butterfly-mark_1fc22d8b.png
+17. maimuna-hero-creative-field_6559b05e.jpg
+18. maimuna-ink-constellation_3bda99f8.jpg
+19. maimuna-tech-sketchbook_3b9027ac.jpg
+20. maimuna-contact-stamp_c8fe4da0.jpg
+
+After adding them, all /manus-storage/... references have already been changed to /images/....
