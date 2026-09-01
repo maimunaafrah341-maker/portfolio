@@ -4,6 +4,13 @@ Interactive portfolio site combining my artwork with the technical/creative proj
 
 🔗 **Live site:** https://maimuna-portfolio.vercel.app
 
+## Screenshots
+
+<p align="center">
+  <img src="./Screenshot%202026-09-01%20184940.png" alt="Portfolio screenshot 1" width="45%" />
+  <img src="./Screenshot%202026-09-01%20184957.png" alt="Portfolio screenshot 2" width="45%" />
+</p>
+
 ## What's inside
 - Original ink, watercolor, and marker artwork — including pieces featured in print and fan art
 - A project showcase: FastInvoice, MASS AI, Study with Mimi, HireScope
