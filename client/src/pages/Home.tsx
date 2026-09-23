@@ -18,6 +18,9 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
+import { motion } from "framer-motion";
+import { Link } from "wouter";
+import { revealChild, revealStagger, revealUp, viewportOnce } from "@/lib/motion";
 
 type ArtCategory = "all" | "watercolour" | "islamic" | "fanart" | "pencil" | "ink";
 
@@ -106,6 +109,15 @@ const artwork: Artwork[] = [
     alt: "Illustration of a person holding yellow sunflowers in a garden",
   },
   {
+    // The original artwork behind the Green Beauty magazine feature. It was
+    // already in the archive, but showing under the Sunflower Study title.
+    title: "Green Beauty",
+    category: "watercolour",
+    medium: "Watercolour & ink",
+    image: "/images/green-beauty-original.jpeg",
+    alt: "Watercolour study of green eyes framed by teal hair, with small green butterflies resting across the face",
+  },
+  {
     title: "The Cut that Always Bleeds",
     category: "ink",
     medium: "Ink & red marker",
@@ -113,12 +125,15 @@ const artwork: Artwork[] = [
     alt: "Black and red ink artwork titled The Cut that Always Bleeds",
   },
   {
-    title: "Tokyo Ghoul",
+    // PLACEHOLDER TITLE. This card said "Tokyo Ghoul" but pointed at the Jab We
+    // Met drawing, and there is no Tokyo Ghoul piece in the archive. It now
+    // holds the watercolour you filed as "watercolour boy - heart". Rename it.
+    // (span: "wide" was dropped -- that crop is 1.55:1 and this image is portrait.)
+    title: "Heart in Hand",
     category: "fanart",
-    medium: "Ink fan art",
-    image: "/images/tokyo-ghoul-fanart.jpeg",
-    alt: "Black and white ink fan art inspired by Tokyo Ghoul",
-    span: "wide",
+    medium: "Watercolour & ink",
+    image: "/images/watercolour-heart.jpeg",
+    alt: "Watercolour drawing of a figure seen from behind, hands raised to form a heart",
   },
   {
     title: "Jab We Met",
@@ -163,6 +178,26 @@ const projects = [
     featured: true,
   },
   {
+    kind: "AI copilot",
+    title: "RoleFit",
+    summary:
+      "An application copilot that grounds every skill match in a verbatim quote from your own resume, then turns the gaps it finds into a seven-day plan.",
+    technologies: ["Flask", "Gemini", "Firebase"],
+    href: "https://rolefit-wo3mn26o2a-el.a.run.app",
+    linkLabel: "Open live demo",
+  },
+  {
+    // The repo is still named "hummingbird" -- that was the working name during
+    // Hackwave. The link is correct even though the title no longer matches it.
+    kind: "Hackathon build",
+    title: "HazardWatch OS",
+    summary:
+      "An industrial safety console that opens an incident the moment a camera sees a hazard and speaks the warning in the bystander's language, built at Hackwave 3.0 and placed top 20 of 126 teams.",
+    technologies: ["Python", "FastAPI", "YOLO"],
+    href: "https://github.com/maimunaafrah341-maker/hummingbird",
+    linkLabel: "View source",
+  },
+  {
     kind: "AI agent",
     title: "Hire-scope",
     summary:
@@ -200,7 +235,7 @@ const filters: Array<{ id: ArtCategory; label: string }> = [
   { id: "ink", label: "Ink & marker" },
 ];
 
-const contactEmail = "Maimunaafrah341@gmail.con";
+const contactEmail = "just.m.trying@gmail.com";
 
 function scrollToSection(sectionId: string) {
   document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -212,6 +247,13 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<ArtCategory>("all");
   const [preview, setPreview] = useState<Artwork | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+
+  // Arriving from the journal via an anchor such as "/#contact": React has only
+  // just painted, so the browser's own jump-to-hash had nothing to aim at yet.
+  useEffect(() => {
+    const target = window.location.hash.slice(1);
+    if (target) scrollToSection(target);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 28);
@@ -264,6 +306,7 @@ export default function Home() {
           <button onClick={() => navigateTo("features")}>Features</button>
           <button onClick={() => navigateTo("art")}>Artwork</button>
           <button onClick={() => navigateTo("projects")}>Projects</button>
+          <Link href="/blog">Journal</Link>
         </nav>
 
         <button className="header-contact" onClick={() => navigateTo("contact")}>
@@ -285,13 +328,14 @@ export default function Home() {
           <button onClick={() => navigateTo("features")}>Magazine features</button>
           <button onClick={() => navigateTo("art")}>Artwork archive</button>
           <button onClick={() => navigateTo("projects")}>Project notebook</button>
+          <Link href="/blog" onClick={() => setMobileMenuOpen(false)}>Journal</Link>
           <button onClick={() => navigateTo("contact")}>Contact</button>
         </div>
       </header>
 
       <section className="hero section-anchor" id="top">
         <div className="hero-paper-noise" aria-hidden="true" />
-        <div className="hero-copy">
+        <motion.div className="hero-copy" initial="hidden" animate="visible" variants={revealUp}>
           <p className="eyebrow"><span />Creative technologist & visual artist</p>
           <h1>
             <span>Ink, intuition,</span>
@@ -305,6 +349,13 @@ export default function Home() {
             <button className="ink-button" onClick={() => navigateTo("features")}>
               Enter the archive <ArrowDownRight aria-hidden="true" />
             </button>
+            {/* Same button family as "Enter the archive" -- same size, type and
+                offset shadow -- but outlined rather than solid, so the hero has
+                one clear primary action instead of two competing ones. Delete
+                "ghost-button" from the className to make them identical. */}
+            <button className="ink-button ghost-button" onClick={() => navigateTo("projects")}>
+              Go to projects <ArrowDownRight aria-hidden="true" />
+            </button>
             <a className="quiet-link" href="https://github.com/maimunaafrah341-maker" target="_blank" rel="noreferrer">
               <Github aria-hidden="true" /> Explore GitHub
             </a>
@@ -312,14 +363,22 @@ export default function Home() {
               <Linkedin aria-hidden="true" /> View LinkedIn
             </a>
           </div>
-        </div>
-        <div className="hero-visual" aria-label="Ink-and-watercolour creative technology artwork">
+        </motion.div>
+        {/* Opacity only: .hero-visual carries a CSS rotate(1.1deg), and animating
+            any transform value here would make framer-motion overwrite it. */}
+        <motion.div
+          className="hero-visual"
+          aria-label="Ink-and-watercolour creative technology artwork"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.7, delay: 0.15, ease: [0.23, 1, 0.32, 1] }}
+        >
           <img src="/images/hero-creative-field.jpg" alt="Abstract hand-drawn scene where ink, butterflies, paper and technology mingle" />
           <div className="hero-caption">
             <span>FIELD NOTES</span>
             <strong>art / code / curiosity</strong>
           </div>
-        </div>
+        </motion.div>
         <button className="hero-scroll-cue" onClick={() => navigateTo("features")} aria-label="Scroll to featured work">
           <span>scroll to wander</span>
           <ArrowDownRight aria-hidden="true" />
@@ -328,12 +387,18 @@ export default function Home() {
 
       <section className="about-section section-anchor" id="about">
         <div className="section-marker"><span>01</span><i>About the maker</i></div>
-        <div className="about-grid">
-          <div className="about-title">
+        <motion.div
+          className="about-grid"
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
+          variants={revealStagger}
+        >
+          <motion.div className="about-title" variants={revealChild}>
             <p className="eyebrow">A practice in two languages</p>
             <h2>Making room for <em>feeling</em> in the systems we build.</h2>
-          </div>
-          <div className="about-copy">
+          </motion.div>
+          <motion.div className="about-copy" variants={revealChild}>
             <p>
               I am a B.Tech AI &amp; ML student at SCETW, Hyderabad, working at the meeting point of visual storytelling and emerging technology. My art is where I listen closely; my code is where I turn that attention into tools and experiences.
             </p>
@@ -343,22 +408,39 @@ export default function Home() {
             <a className="text-action" href="https://www.instagram.com/just_m.trying/" target="_blank" rel="noreferrer">
               Find the everyday sketches <ArrowUpRight aria-hidden="true" />
             </a>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
+        {/* The ink-constellation background art was never exported from Manus and
+            is not on disk anywhere. Restore this line once the file exists at
+            client/public/images/ink-constellation.jpg -- it is purely decorative
+            (13% opacity, aria-hidden), so the section reads fine without it. */}
+        {/* <img className="about-constellation" src="/images/ink-constellation.jpg" alt="" aria-hidden="true" /> */}
       </section>
 
       <section className="feature-section section-anchor" id="features">
-        <div className="feature-intro">
+        <motion.div
+          className="feature-intro"
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
+          variants={revealUp}
+        >
           <div className="section-marker"><span>02</span><i>Selected press</i></div>
           <p className="eyebrow">As seen in HashtagKalakar</p>
           <h2>Three pages from a growing <em>visual voice.</em></h2>
           <p>
             Recent magazine features that carried my work beyond the sketchbook. Each one is a small record of experimentation, emotion, and line.
           </p>
-        </div>
-        <div className="feature-list">
+        </motion.div>
+        <motion.div
+          className="feature-list"
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
+          variants={revealStagger}
+        >
           {featuredStories.map((story) => (
-            <article className={`feature-story ${story.palette}`} key={story.title}>
+            <motion.article className={`feature-story ${story.palette}`} key={story.title} variants={revealChild}>
               <div className="feature-number">{story.number}</div>
               <div className="feature-image-wrap">
                 <img src={story.image} alt={story.alt} loading="lazy" />
@@ -369,13 +451,19 @@ export default function Home() {
                 <h3>{story.title}</h3>
                 <span>{story.description}</span>
               </div>
-            </article>
+            </motion.article>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       <section className="art-section section-anchor" id="art">
-        <div className="art-intro">
+        <motion.div
+          className="art-intro"
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
+          variants={revealUp}
+        >
           <div>
             <div className="section-marker"><span>03</span><i>Artwork archive</i></div>
             <p className="eyebrow">Original works</p>
@@ -384,7 +472,7 @@ export default function Home() {
           <p>
             From quiet devotional linework to favourite stories and coffee-stained experiments, this is the part of the archive that keeps changing.
           </p>
-        </div>
+        </motion.div>
 
         <div className="archive-toolbar" aria-label="Artwork filters">
           {filters.map((filter) => (
@@ -426,16 +514,32 @@ export default function Home() {
           <img src="/images/tech-sketchbook.jpg" alt="Sketchbook with hand-drawn technology and art study motifs" />
           <div className="projects-stamp"><Code2 aria-hidden="true" /><span>BUILDING<br />WITH CARE</span></div>
         </div>
-        <div className="projects-content">
+        <motion.div
+          className="projects-content"
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
+          variants={revealUp}
+        >
           <div className="section-marker"><span>04</span><i>Project notebook</i></div>
           <p className="eyebrow">Creative technology</p>
           <h2>Ideas that want to become <em>useful.</em></h2>
           <p className="projects-intro">
             I approach code like a research sketch: prototype clearly, listen for what matters, then keep refining the experience.
           </p>
-          <div className="project-list">
+          {/* The list inherits "visible" from .projects-content above, so it needs
+              no viewport of its own -- it only adds the stagger between rows. */}
+          <motion.div className="project-list" variants={revealStagger}>
             {projects.map((project, index) => (
-              <a className={`project-row ${project.featured ? "featured-project" : ""}`} href={project.href} target="_blank" rel="noreferrer" key={project.title}>
+              <motion.a
+                className={`project-row ${project.featured ? "featured-project" : ""}`}
+                href={project.href}
+                target="_blank"
+                rel="noreferrer"
+                key={project.title}
+                variants={revealChild}
+                whileHover={{ y: -3, transition: { type: "spring", stiffness: 380, damping: 26 } }}
+              >
                 <span className="project-index">0{index + 1}</span>
                 <span className="project-body">
                   <small>{project.kind}</small>
@@ -445,34 +549,65 @@ export default function Home() {
                   <span className="project-link-label">{project.linkLabel} <ArrowUpRight aria-hidden="true" /></span>
                 </span>
                 <ArrowUpRight aria-hidden="true" />
-              </a>
+              </motion.a>
             ))}
-          </div>
+          </motion.div>
           <a className="text-action" href="https://github.com/maimunaafrah341-maker?tab=repositories" target="_blank" rel="noreferrer">
             Read the full project index <ChevronRight aria-hidden="true" />
           </a>
-        </div>
+        </motion.div>
       </section>
 
       <section className="contact-section section-anchor" id="contact">
-        <div className="contact-copy">
+        <motion.div
+          className="contact-copy"
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
+          variants={revealUp}
+        >
           <div className="section-marker"><span>05</span><i>Start a conversation</i></div>
           <p className="eyebrow">Let’s make something attentive</p>
           <h2>Have a thought worth <em>drawing out?</em></h2>
           <p>
             I am always glad to hear about creative collaborations, thoughtful technology, artwork, and ideas still looking for their first form.
           </p>
-          <div className="contact-links">
-            <a className="instagram-link" href="https://www.instagram.com/just_m.trying/" target="_blank" rel="noreferrer">
-              <Instagram aria-hidden="true" /> @just_m.trying <ArrowUpRight aria-hidden="true" />
+          {/* LinkedIn and Instagram were previously small underlined text that
+              read as footnotes. They are the two channels most people actually
+              use, so they now get cards with a visible edge and hover lift. */}
+          <div className="contact-social">
+            <a className="social-card" href="https://www.linkedin.com/in/maimuna-afrah-2b41b63a0" target="_blank" rel="noreferrer">
+              <Linkedin aria-hidden="true" />
+              <span>
+                <strong>Message me on LinkedIn</strong>
+                <em>in/maimuna-afrah</em>
+              </span>
+              <ArrowUpRight aria-hidden="true" />
             </a>
+            <a className="social-card" href="https://www.instagram.com/just_m.trying/" target="_blank" rel="noreferrer">
+              <Instagram aria-hidden="true" />
+              <span>
+                <strong>See the sketches on Instagram</strong>
+                <em>@just_m.trying</em>
+              </span>
+              <ArrowUpRight aria-hidden="true" />
+            </a>
+          </div>
+          <div className="contact-links">
             <a className="contact-email" href={`mailto:${contactEmail}`}>
               <Mail aria-hidden="true" /> {contactEmail} <ArrowUpRight aria-hidden="true" />
             </a>
           </div>
           <img className="contact-art" src="/images/contact-stamp.jpg" alt="Ink-drawn envelope opening into a butterfly" />
-        </div>
-        <form className="contact-form" onSubmit={handleContact}>
+        </motion.div>
+        <motion.form
+          className="contact-form"
+          onSubmit={handleContact}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
+          variants={revealUp}
+        >
           <label>
             <span>Your name</span>
             <input required name="name" autoComplete="name" placeholder="How should I address you?" />
@@ -488,7 +623,7 @@ export default function Home() {
           <button className="ink-button form-button" type="submit">Leave a note <Send aria-hidden="true" /></button>
           <p className="form-caption"><Mail aria-hidden="true" />Submitting opens your email app with a prefilled note addressed to Maimuna.</p>
           {notice && <p className="form-notice" role="status">{notice}</p>}
-        </form>
+        </motion.form>
       </section>
 
       <footer className="site-footer">
@@ -500,6 +635,7 @@ export default function Home() {
           <a href="https://github.com/maimunaafrah341-maker" target="_blank" rel="noreferrer">GitHub</a>
           <a href="https://www.linkedin.com/in/maimuna-afrah-2b41b63a0" target="_blank" rel="noreferrer">LinkedIn</a>
           <a href="https://www.instagram.com/just_m.trying/" target="_blank" rel="noreferrer">Instagram</a>
+          <Link href="/blog">Journal</Link>
           <button onClick={() => navigateTo("top")}>Back to top ↑</button>
         </div>
       </footer>

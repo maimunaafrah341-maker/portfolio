@@ -111,3 +111,9 @@ temp/
 # Manus version file (auto-generated, not part of source)
 client/public/__manus__/version.json
 .project-config.json
+
+# Untouched high-res image masters kept locally (~23MB), not part of the site
+original-assets/
+
+# Manus session-recording leftovers - not referenced by index.html, not wanted in public/
+client/public/manus/

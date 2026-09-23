@@ -1,0 +1,104 @@
+MAIMUNA PORTFOLIO — ASSETS
+
+STATUS: 20 of 21 images are in place. The site renders fully.
+Only the decorative ink-constellation background is still missing.
+
+
+WHERE THEY CAME FROM
+--------------------
+The original Manus ZIP never contained the artwork — it referenced Manus
+storage, using filenames with an 8-character hash suffix
+(e.g. sunflower-watercolor_4e02bed1.jpeg). No file with a hash suffix exists
+anywhere on this machine, so none of those references could ever resolve.
+
+The actual artwork was found in two places on the Desktop:
+
+    Desktop/cleaned/client/public/images/   19 images, short names
+    Desktop/imagesss/                       the same 16 artworks, your own names
+
+Both hold identical files (verified by content hash). "green beauty.jpeg"
+exists only in imagesss/.
+
+The project now uses short, honest filenames throughout. The hash-suffix names
+are gone from the code.
+
+
+FOUR CARDS WERE SHOWING THE WRONG ARTWORK
+-----------------------------------------
+The Manus code had images cross-wired. Verified by opening each file:
+
+  card title                    used to point at        now points at
+  Sunflower Study               green-beauty-original   sunflower-watercolor
+  The Cut that Always Bleeds    sunflower-watercolor    the-cut-that-always-bleeds
+  Tokyo Ghoul                   jab-we-met-fanart       (retitled, see below)
+  Jab We Met                    tokyo-ghoul-fanart      jab-we-met-fanart
+
+Two further changes came out of that untangling:
+
+  - "Green Beauty" is now its own card. It is the original artwork behind the
+    HashtagKalakar feature (green eyes, green butterflies). It was already on
+    the page, but displayed under the "Sunflower Study" title.
+
+  - "Tokyo Ghoul" had no artwork. Its alt text described black-and-red ink fan
+    art, but the only such piece is the Zoro drawing, already used by "The Cut
+    that Always Bleeds". The file named tokyo-ghoul-fanart.jpeg is actually the
+    piece you filed as "watercolour boy - heart".
+
+    That card now shows the heart watercolour under the PLACEHOLDER title
+    "Heart in Hand", renamed on disk to watercolour-heart.jpeg. Rename it in
+    the artwork array in client/src/pages/Home.tsx — it is marked with a
+    comment. If the real Tokyo Ghoul drawing turns up, add it as a new entry.
+
+
+IMAGE SIZES
+-----------
+The four originally in the repo were 1920px-class PNGs totalling 22.5 MB,
+including a 5.9 MB logo displayed at 42x42 px. They are now:
+
+  butterfly-mark.png        256x256      92 KB   PNG, transparent
+  hero-creative-field.jpg   1600x900    366 KB   JPEG
+  tech-sketchbook.jpg       1200x1500   403 KB   JPEG
+  contact-stamp.jpg         600x750      82 KB   JPEG
+
+The logo also had a magenta background that was never keyed out — left at about
+12% opacity, so it rendered as an uneven pink square in every header and footer.
+Removed by keying on the magenta hue (no artwork in it is magenta) rather than
+on opacity, because the matte's opacity was uneven. Note the copy in
+Desktop/cleaned/ has the same magenta problem — do not copy it back over.
+
+The 16 recovered artworks were already web-sized (75-256 KB each) and were
+copied in as-is.
+
+Whole deployed site is now 4.3 MB.
+
+Untouched originals of the four are in original-assets/ at the repo root. That
+folder sits outside client/public, so it is NOT deployed. Keep it as your
+masters or gitignore it, but do not delete it unless you have copies elsewhere.
+
+
+STILL MISSING (1 of 21)
+-----------------------
+    ink-constellation.jpg
+
+The faint background art on the About section. It is not in cleaned/, not in
+imagesss/, and not in any zip on the Desktop — it was never exported from Manus.
+
+Its <img> tag in client/src/pages/Home.tsx is commented out with a note, so
+nothing breaks. Drop a file at client/public/images/ink-constellation.jpg and
+uncomment that line to restore it. It is purely decorative — 13% opacity and
+aria-hidden — so the section reads fine without it.
+
+
+NOTE ON OneDrive
+----------------
+This repo lives inside OneDrive. During the image work OneDrive raced the writes
+and produced "-LAPTOP-<name>" conflict copies instead of replacing files. If you
+see that suffix appear, the suffixed file is usually the newer content. Pausing
+OneDrive sync during bulk file work avoids it.
+
+
+NOTE ON client/src/Home-fixed.tsx
+---------------------------------
+Not imported anywhere, not part of the build. It uses the same short image names
+the project now uses, so its paths happen to resolve again — but it is still
+dead code. Delete it when you are sure you do not want it.

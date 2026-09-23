@@ -13,13 +13,15 @@ Interactive portfolio site combining my artwork with the technical/creative proj
 
 ## What's inside
 - Original ink, watercolor, and marker artwork — including pieces featured in print and fan art
-- A project showcase: FastInvoice, MASS AI, Study with Mimi, HireScope
+- A project showcase: Athena, RoleFit, HazardWatch OS, Hire-scope, FF-01-S5, Study with Mimi
+- A journal at `/blog` for hackathon results and project launches
 - An About section connecting the art side and the code side
 
 ## Built with
 - React + TypeScript
 - Vite
 - Tailwind CSS
+- wouter (routing) + framer-motion (scroll and hover motion)
 
 ## Running locally
 \`\`\`bash

@@ -1,0 +1,234 @@
+/**
+ * Living Sketchbook style: the journal is the same paper as the portfolio, just
+ * turned to a page with writing on it. It deliberately reuses the classes the
+ * home page already defines -- .section-anchor, .eyebrow, .section-marker,
+ * .text-action, .tech-list, .art-footnote, .site-footer -- so it inherits every
+ * future tweak to the visual language for free.
+ *
+ * To add a post: drop one more object into `posts` below. Nothing else to touch.
+ */
+import { useEffect, useState } from "react";
+import { ArrowUpRight, Menu, PenLine, Sparkles, X } from "lucide-react";
+import { Link } from "wouter";
+import { motion } from "framer-motion";
+import { revealChild, revealStagger, revealUp, viewportOnce } from "@/lib/motion";
+
+type BlogPost = {
+  /** Stable id. Doubles as the in-page anchor, e.g. /blog#hackwave-3-top-20 */
+  slug: string;
+  /** The small teal chip: "Hackathon", "Project launch", "Feature", ... */
+  kind: string;
+  title: string;
+  /** ISO 8601 -- machine readable, used by <time dateTime>. */
+  date: string;
+  /** What the reader actually sees. */
+  dateLabel: string;
+  /** One-line standfirst, set slightly larger than the body. */
+  summary: string;
+  /** One string per paragraph. */
+  body: string[];
+  tags: string[];
+  /** Usually the LinkedIn post this note is expanding on. Optional. */
+  href?: string;
+  linkLabel?: string;
+};
+
+const posts: BlogPost[] = [
+  // ---------------------------------------------------------------------
+  // SAMPLE POST -- the shape to copy. The dates are yours; the prose is still a
+  // placeholder written in your voice, so rewrite it before this goes anywhere.
+  // ---------------------------------------------------------------------
+  {
+    slug: "hackwave-3-top-20",
+    kind: "Hackathon",
+    date: "2026-09-04",
+    dateLabel: "4–5 September 2026",
+    title: "HazardWatch OS finished top 20 of 126 at Hackwave 3.0",
+    summary:
+      "Two days spent learning that the hard part of an alarm is deciding when not to ring it.",
+    body: [
+      "A camera watches a bay. Somebody walks in without a hardhat. Nobody presses anything. A few seconds later there is an open incident, a spoken warning in the language of the person actually standing there, and a record an inspector could sign. That was the whole pitch for HazardWatch OS, and we had two days to make it true.",
+      "The detection was the part we expected to be difficult. It wasn't. Restraint was. A system that shouts at every flicker is a system people switch off in a week, so a detection now has to hold across three of eight frames before anything happens at all. The safety protocols are fixed text chosen by chemical and event type, never written by a model, because an evacuation instruction is not a place for a plausible guess.",
+      "The multilingual part ships as pre-translated phrase tables rather than live translation, for the same reason. Hindi, Telugu, Bengali. A warning that arrives late and fluent is worse than one that arrives instantly and plain.",
+      "We placed in the top 20 out of 126 teams. What stayed with me was less the ranking than the shape of the problem: almost all the real work was in the decision not to act.",
+    ],
+    tags: ["Python", "FastAPI", "YOLO", "Hackwave 3.0"],
+    href: "https://www.linkedin.com/in/maimuna-afrah-2b41b63a0",
+    linkLabel: "Read the LinkedIn post",
+  },
+
+  // Copy this block for the next note:
+  // {
+  //   slug: "unique-kebab-case-id",
+  //   kind: "Project launch",
+  //   date: "2026-01-15",
+  //   dateLabel: "January 2026",
+  //   title: "Something you shipped",
+  //   summary: "One sentence that makes a reader want the rest.",
+  //   body: ["First paragraph.", "Second paragraph."],
+  //   tags: ["Tag", "Tag"],
+  //   href: "https://www.linkedin.com/posts/...",
+  //   linkLabel: "Read the LinkedIn post",
+  // },
+];
+
+export default function Blog() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    // wouter does not reset scroll between routes, so arriving from the home
+    // page would otherwise drop you halfway down the journal. index.css sets
+    // `html { scroll-behavior: smooth }`, which would turn that reset into a
+    // long visible whoosh -- so switch it off just for this one jump.
+    const root = document.documentElement;
+    const previous = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
+    window.scrollTo(0, 0);
+    root.style.scrollBehavior = previous;
+  }, []);
+
+  useEffect(() => {
+    // Same 28px threshold as the home page, so the header behaves identically.
+    const onScroll = () => setIsScrolled(window.scrollY > 28);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <main className="site-shell">
+      <header className={`site-header ${isScrolled ? "is-scrolled" : ""}`}>
+        <Link href="/" className="brand-lockup" aria-label="Back to the portfolio">
+          <img src="/images/butterfly-mark.png" alt="Butterfly pen-nib logo" />
+          <span>
+            <strong>Maimuna Afrah</strong>
+            <em>art × technology</em>
+          </span>
+        </Link>
+
+        <nav className="desktop-nav" aria-label="Primary navigation">
+          <Link href="/">Portfolio</Link>
+          <Link href="/blog" aria-current="page" className="is-current">Journal</Link>
+        </nav>
+
+        <Link href="/#contact" className="header-contact">
+          Let’s connect <ArrowUpRight aria-hidden="true" />
+        </Link>
+
+        <button
+          className="menu-toggle"
+          type="button"
+          aria-label={mobileMenuOpen ? "Close navigation" : "Open navigation"}
+          aria-expanded={mobileMenuOpen}
+          onClick={() => setMobileMenuOpen(open => !open)}
+        >
+          {mobileMenuOpen ? <X /> : <Menu />}
+        </button>
+
+        <div className={`mobile-menu ${mobileMenuOpen ? "is-open" : ""}`}>
+          <Link href="/" onClick={() => setMobileMenuOpen(false)}>Portfolio</Link>
+          <Link href="/#art" onClick={() => setMobileMenuOpen(false)}>Artwork archive</Link>
+          <Link href="/#projects" onClick={() => setMobileMenuOpen(false)}>Project notebook</Link>
+          <Link href="/#contact" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
+        </div>
+      </header>
+
+      <section className="journal-hero section-anchor" id="top">
+        <motion.div initial="hidden" animate="visible" variants={revealUp}>
+          <div className="section-marker"><span>✦</span><i>Field journal</i></div>
+          <p className="eyebrow"><span />Notes, launches & small wins</p>
+          <h1>
+            The posts behind the <em>portfolio.</em>
+          </h1>
+          <p className="journal-intro">
+            Hackathon weekends, things that finally shipped, and the occasional
+            idea that needed more than a LinkedIn caption. Written down here so
+            they outlast the feed.
+          </p>
+        </motion.div>
+      </section>
+
+      <section className="journal-section section-anchor" id="notes">
+        <motion.div
+          className="journal-list"
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
+          variants={revealStagger}
+        >
+          {posts.map((post, index) => (
+            <motion.article
+              className="journal-entry"
+              key={post.slug}
+              id={post.slug}
+              variants={revealChild}
+            >
+              <div className="journal-meta">
+                <div className="section-marker">
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <i>{post.kind}</i>
+                </div>
+                <time className="journal-date" dateTime={post.date}>
+                  {post.dateLabel}
+                </time>
+              </div>
+
+              <div className="journal-body">
+                <h2>{post.title}</h2>
+                <p className="journal-summary">{post.summary}</p>
+                {post.body.map((paragraph, i) => (
+                  <p key={i}>{paragraph}</p>
+                ))}
+                <span className="tech-list">
+                  {post.tags.map(tag => (
+                    <em key={tag}>{tag}</em>
+                  ))}
+                </span>
+                {post.href && (
+                  <a className="text-action" href={post.href} target="_blank" rel="noreferrer">
+                    {post.linkLabel ?? "Read the post"} <ArrowUpRight aria-hidden="true" />
+                  </a>
+                )}
+              </div>
+            </motion.article>
+          ))}
+        </motion.div>
+
+        {posts.length === 0 ? (
+          <p className="art-footnote">
+            <PenLine aria-hidden="true" />
+            <span>The first note is still being written.</span>
+          </p>
+        ) : (
+          <p className="art-footnote">
+            <Sparkles aria-hidden="true" />
+            <span>
+              More notes as they happen — add one by editing the{" "}
+              <code>posts</code> array in <code>client/src/pages/Blog.tsx</code>.
+            </span>
+          </p>
+        )}
+
+        <Link href="/#projects" className="text-action journal-back">
+          See the projects these notes are about <ArrowUpRight aria-hidden="true" />
+        </Link>
+      </section>
+
+      <footer className="site-footer">
+        <div className="footer-brand">
+          <img src="/images/butterfly-mark.png" alt="" aria-hidden="true" />
+          <span>Maimuna Afrah <em>— creative technology portfolio</em></span>
+        </div>
+        <div className="footer-links">
+          <Link href="/">Portfolio</Link>
+          <a href="https://github.com/maimunaafrah341-maker" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/maimuna-afrah-2b41b63a0" target="_blank" rel="noreferrer">LinkedIn</a>
+          <a href="https://www.instagram.com/just_m.trying/" target="_blank" rel="noreferrer">Instagram</a>
+          <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+            Back to top ↑
+          </button>
+        </div>
+      </footer>
+    </main>
+  );
+}

@@ -118,8 +118,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .brand-lockup strong { font-family: "DM Serif Display", Georgia, serif; font-size: 1.1rem; font-weight: 400; letter-spacing: -0.02em; }
 .brand-lockup em { color: var(--teal); font-size: 0.58rem; font-style: normal; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; }
 .desktop-nav { display: flex; align-items: center; gap: 1.6rem; }
-.desktop-nav button, .footer-links button { padding: 5px 0; background: transparent; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; transition: color 160ms ease; }
-.desktop-nav button:hover, .footer-links button:hover { color: var(--teal); }
+.desktop-nav button, .desktop-nav a, .footer-links button { padding: 5px 0; background: transparent; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; transition: color 160ms ease; }
+.desktop-nav button:hover, .desktop-nav a:hover, .footer-links button:hover { color: var(--teal); }
+.desktop-nav a.is-current { color: var(--teal); }
 .header-contact { justify-self: end; display: inline-flex; align-items: center; gap: 8px; padding: 9px 0 9px 14px; background: transparent; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
 .header-contact svg { width: 17px; height: 17px; color: var(--teal); }
 .menu-toggle, .mobile-menu { display: none; }
@@ -142,6 +143,10 @@ h1, h2, h3 { font-family: "DM Serif Display", Georgia, serif; font-weight: 400; 
 .ink-button:hover { background: var(--teal); transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--mustard); }
 .ink-button:active { transform: scale(0.97); box-shadow: 2px 2px 0 var(--mustard); }
 .ink-button svg { width: 17px; height: 17px; }
+.ink-button.ghost-button { color: var(--ink); border: 1px solid var(--ink); padding: 11px 16px; background: transparent; box-shadow: 4px 4px 0 var(--teal-pale); }
+.ink-button.ghost-button:hover { color: #fffdf8; background: var(--teal); border-color: var(--teal); box-shadow: 6px 6px 0 var(--teal-pale); }
+.ink-button.ghost-button svg { color: var(--teal); }
+.ink-button.ghost-button:hover svg { color: #fffdf8; }
 .quiet-link { display: inline-flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--ink); padding-bottom: 4px; font-size: 0.71rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; transition: color 160ms ease, border-color 160ms ease; }
 .quiet-link:hover { color: var(--teal); border-color: var(--teal); }
 .quiet-link svg { width: 15px; height: 15px; }
@@ -251,6 +256,18 @@ h1, h2, h3 { font-family: "DM Serif Display", Georgia, serif; font-weight: 400; 
 .contact-copy h2 { max-width: 560px; }
 .contact-copy h2 em { color: #e1af50; }
 .contact-copy > p:not(.eyebrow) { max-width: 570px; margin: 1.5rem 0; color: rgba(255,253,248,.69); font-size: 0.89rem; line-height: 1.75; }
+/* Contact: LinkedIn and Instagram as cards, not footnotes. */
+.contact-social { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; max-width: 580px; margin: 0 0 1.5rem; }
+.social-card { display: flex; align-items: center; gap: 12px; border: 1px solid rgba(167, 221, 210, 0.42); padding: 15px 16px; color: #fffdf8; background: rgba(167, 221, 210, 0.06); box-shadow: 5px 5px 0 rgba(167, 221, 210, 0.17); transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, background-color 160ms ease; }
+.social-card:hover { border-color: #e1af50; background: rgba(225, 175, 80, 0.1); transform: translate(-2px, -2px); box-shadow: 7px 7px 0 rgba(225, 175, 80, 0.32); }
+.social-card > svg:first-child { flex: 0 0 auto; width: 21px; height: 21px; color: #a7ddd2; transition: color 160ms ease; }
+.social-card:hover > svg:first-child { color: #e1af50; }
+.social-card span { display: grid; gap: 3px; min-width: 0; }
+.social-card strong { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+.social-card em { color: rgba(255, 253, 248, 0.62); font-size: 0.73rem; font-style: normal; font-weight: 500; letter-spacing: 0.01em; }
+.social-card > svg:last-child { flex: 0 0 auto; width: 15px; height: 15px; margin-left: auto; color: #a7ddd2; transition: transform 160ms ease, color 160ms ease; }
+.social-card:hover > svg:last-child { color: #e1af50; transform: translate(2px, -2px); }
+
 .contact-links { display: flex; flex-wrap: wrap; gap: 12px 20px; }
 .instagram-link, .contact-email { display: inline-flex; align-items: center; gap: 8px; border-bottom: 1px solid #a7ddd2; padding-bottom: 4px; color: #a7ddd2; font-size: 0.67rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; transition: color 160ms ease, border-color 160ms ease; }
 .instagram-link:hover, .contact-email:hover { color: #e1af50; border-color: #e1af50; }
@@ -287,6 +304,30 @@ h1, h2, h3 { font-family: "DM Serif Display", Georgia, serif; font-weight: 400; 
 .dialog-close { position: absolute; top: 9px; right: 9px; z-index: 2; display: grid; place-items: center; width: 34px; height: 34px; color: #fffdf8; background: var(--ink); }
 .dialog-close svg { width: 17px; }
 
+/* Journal (/blog): the same paper and the same rules, one page turned to writing. */
+.journal-hero { position: relative; padding: 150px 7vw 5.5rem; background: #ece5d9; }
+.journal-hero::after { position: absolute; right: 5.8vw; bottom: 0; left: 7vw; height: 1px; content: ""; background: var(--line); }
+.journal-hero h1 { max-width: 760px; margin-bottom: 1.5rem; font-size: clamp(2.9rem, 5.6vw, 5.1rem); line-height: 0.95; }
+.journal-hero h1 em { color: var(--teal); font-style: italic; }
+.journal-hero .section-marker span { font-size: 0.72rem; }
+.journal-intro { max-width: 520px; margin: 0; color: var(--ink-soft); font-size: 0.94rem; line-height: 1.8; }
+
+.journal-section { padding: 5.5rem 7vw 7.5rem; background: var(--paper); }
+.journal-list { max-width: 1180px; border-top: 1px solid var(--line); }
+.journal-entry { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: clamp(1.5rem, 5vw, 4.5rem); border-bottom: 1px solid var(--line); padding: 3.2rem 0; scroll-margin-top: 94px; }
+.journal-meta { display: grid; align-content: start; gap: 6px; }
+.journal-meta .section-marker { margin-bottom: 0; }
+.journal-date { color: var(--ink-soft); font-size: 0.62rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; }
+.journal-body h2 { margin-bottom: 0.7rem; font-size: clamp(1.85rem, 3vw, 2.7rem); line-height: 1.05; }
+.journal-body h2 em { color: var(--teal); font-style: italic; }
+.journal-summary { margin-bottom: 1.25rem; color: var(--ink); font-size: 0.97rem; font-style: italic; line-height: 1.7; }
+.journal-body > p:not(.journal-summary) { margin-bottom: 0; color: var(--ink-soft); font-size: 0.87rem; line-height: 1.85; }
+.journal-body > p:not(.journal-summary) + p { margin-top: 0.9rem; }
+.journal-body .tech-list { margin-top: 1.4rem; }
+.journal-body .text-action { margin-top: 1.4rem; }
+.journal-section .art-footnote code { padding: 2px 5px; background: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.94em; }
+.journal-back { margin-top: 1.6rem; }
+
 @keyframes rise-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes dialog-in { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
@@ -301,12 +342,13 @@ h1, h2, h3 { font-family: "DM Serif Display", Georgia, serif; font-weight: 400; 
   .menu-toggle svg { width: 23px; }
   .mobile-menu { position: absolute; top: 70px; right: 4vw; left: 4vw; z-index: 1; gap: 2px; padding: 9px; background: var(--ink); box-shadow: 7px 8px 0 rgba(200,143,31,.7); opacity: 0; pointer-events: none; transform: translateY(-7px); transition: opacity 170ms ease, transform 170ms ease; }
   .mobile-menu.is-open { display: grid; opacity: 1; pointer-events: auto; transform: translateY(0); }
-  .mobile-menu button { padding: 12px; color: #fffdf8; background: transparent; text-align: left; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.13em; text-transform: uppercase; }
-  .mobile-menu button:hover { color: #a7ddd2; }
+  .mobile-menu button, .mobile-menu a { padding: 12px; color: #fffdf8; background: transparent; text-align: left; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.13em; text-transform: uppercase; }
+  .mobile-menu button:hover, .mobile-menu a:hover { color: #a7ddd2; }
   .hero { grid-template-columns: 1fr; gap: 3rem; min-height: 0; padding-top: 130px; }
   .hero-copy { padding-right: 0; padding-bottom: 0; }
   .hero h1 { max-width: 720px; }
   .hero-visual { width: min(700px, 92%); justify-self: center; margin-top: 0; }
+  .hero-actions { gap: 1rem 1.1rem; }
   .hero-scroll-cue { display: none; }
   .about-grid, .feature-intro { grid-template-columns: 1fr; gap: 2rem; }
   .feature-intro h2 { grid-column: auto; }
@@ -317,6 +359,9 @@ h1, h2, h3 { font-family: "DM Serif Display", Georgia, serif; font-weight: 400; 
   .projects-content { padding: 7rem 5vw; }
   .contact-section { grid-template-columns: 1fr; gap: 4rem; }
   .contact-art { bottom: -52px; }
+  .journal-hero { padding-top: 132px; }
+  .journal-entry { grid-template-columns: 1fr; gap: 1.2rem; }
+  .journal-meta { grid-auto-flow: column; justify-content: start; align-items: center; gap: 16px; }
 }
 
 @media (max-width: 650px) {
@@ -355,6 +400,7 @@ h1, h2, h3 { font-family: "DM Serif Display", Georgia, serif; font-weight: 400; 
   .projects-stamp { top: auto; right: 7%; bottom: 7%; }
   .contact-section { gap: 2.7rem; }
   .contact-art { right: -5%; bottom: -59px; width: 170px; }
+  .contact-social { grid-template-columns: 1fr; gap: 11px; }
   .contact-form { padding: 2rem 1.35rem; }
   .site-footer { display: grid; padding: 2rem 6vw; }
   .footer-brand { align-items: flex-start; }
@@ -365,4 +411,9 @@ h1, h2, h3 { font-family: "DM Serif Display", Georgia, serif; font-weight: 400; 
   .art-dialog { grid-template-columns: 1fr; max-height: 94vh; overflow: auto; }
   .art-dialog img { max-height: 70vh; }
   .art-dialog > div { padding: 1.2rem; }
+  .journal-hero { padding: 112px 6vw 4rem; }
+  .journal-hero h1 { font-size: clamp(2.5rem, 11vw, 3.4rem); }
+  .journal-section { padding: 4rem 6vw 5.5rem; }
+  .journal-entry { padding: 2.4rem 0; }
+  .journal-body h2 { font-size: clamp(1.7rem, 8vw, 2.1rem); }
 }
