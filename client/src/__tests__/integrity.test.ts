@@ -29,14 +29,24 @@ const BLOG = read("client/src/pages/Blog.tsx");
 const NOTFOUND = read("client/src/pages/NotFound.tsx");
 const APP = read("client/src/App.tsx");
 const INDEX_HTML = read("client/index.html");
+const POSTS = read("client/src/content/posts.ts");
 
-/** Image paths as they appear in JSX, minus anything inside a comment. */
-function imageRefs(source: string): string[] {
-  const withoutComments = source
+/**
+ * Drop comments before asserting on source. Comments legitimately contain the
+ * very words these tests look for — an entry explaining why it has no `href`,
+ * a doc comment mentioning `<time dateTime>` — and matching those is a false
+ * positive every time.
+ */
+function stripComments(source: string): string {
+  return source
     .replace(/\{\/\*[\s\S]*?\*\/\}/g, "")
     .replace(/\/\*[\s\S]*?\*\//g, "")
     .replace(/^\s*\/\/.*$/gm, "");
-  return [...new Set(withoutComments.match(/\/images\/[A-Za-z0-9_.-]+/g) ?? [])];
+}
+
+/** Image paths as they appear in JSX, minus anything inside a comment. */
+function imageRefs(source: string): string[] {
+  return [...new Set(stripComments(source).match(/\/images\/[A-Za-z0-9_.-]+/g) ?? [])];
 }
 
 describe("image references", () => {
@@ -100,7 +110,7 @@ describe("projects", () => {
     const entry = athena.slice(0, athena.indexOf("},"));
     // Strip comment lines first: the entry explains *why* it has no href, and
     // that explanation contains the word "href".
-    const code = entry.replace(/^\s*\/\/.*$/gm, "");
+    const code = stripComments(entry);
     expect(code).not.toMatch(/^\s*href:/m);
     expect(code).toMatch(/note: "/);
   });
@@ -151,7 +161,7 @@ describe("routing", () => {
 
 describe("journal", () => {
   it("gives every post a unique slug", () => {
-    const slugs = [...BLOG.matchAll(/^\s{4}slug: "([^"]+)"/gm)].map(m => m[1]);
+    const slugs = [...POSTS.matchAll(/^\s{4}slug: "([^"]+)"/gm)].map(m => m[1]);
     expect(slugs.length).toBeGreaterThan(0);
     expect(new Set(slugs).size).toBe(slugs.length);
   });
@@ -162,8 +172,25 @@ describe("journal", () => {
     expect(BLOG).toMatch(/window\.location\.hash/);
   });
 
+  it("keeps developer instructions off the public page", () => {
+    // A note reading "edit the posts array in client/src/pages/Blog.tsx" was
+    // rendering to every visitor. Source paths belong in comments, not JSX.
+    const visible = stripComments(BLOG.slice(BLOG.indexOf("return (")))
+      .replace(/className="[^"]*"/g, "")
+      .replace(/(?:href|src|id|alt|aria-label)=\{?"[^"]*"\}?/g, "");
+    expect(visible).not.toMatch(/client\/src/);
+    expect(visible).not.toMatch(/\.tsx/);
+  });
+
+  it("keeps posts in a data file with no JSX in it", () => {
+    // Adding a post should not mean editing a component.
+    expect(POSTS).toMatch(/export const posts: BlogPost\[\] = \[/);
+    expect(stripComments(POSTS)).not.toMatch(/<[A-Za-z]/);
+    expect(BLOG).toMatch(/import \{ posts \} from "@\/content\/posts"/);
+  });
+
   it("gives every post an ISO date", () => {
-    for (const [, d] of BLOG.matchAll(/^\s{4}date: "([^"]+)"/gm)) {
+    for (const [, d] of POSTS.matchAll(/^\s{4}date: "([^"]+)"/gm)) {
       expect(d).toMatch(/^\d{4}-\d{2}-\d{2}$/);
       expect(Number.isNaN(Date.parse(d))).toBe(false);
     }
