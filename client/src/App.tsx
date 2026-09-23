@@ -6,6 +6,7 @@ import { MotionConfig } from "framer-motion";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import ButterflyTransition from "./components/ButterflyTransition";
 import Blog from "./pages/Blog";
 import Home from "./pages/Home";
 
@@ -32,6 +33,9 @@ function App() {
           <TooltipProvider>
             <Toaster />
             <Router />
+            {/* Sits outside Router on purpose: it watches the location itself,
+                so it survives the page swap it is animating over. */}
+            <ButterflyTransition />
           </TooltipProvider>
         </MotionConfig>
       </ThemeProvider>

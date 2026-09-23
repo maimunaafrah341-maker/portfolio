@@ -197,6 +197,54 @@ describe("journal", () => {
   });
 });
 
+describe("page transition", () => {
+  const FLIGHT = read("client/src/components/ButterflyTransition.tsx");
+  const CSS = read("client/src/index.css");
+
+  it("is skipped entirely under prefers-reduced-motion", () => {
+    // MotionConfig reducedMotion="user" only strips transforms; a flock
+    // sweeping the whole viewport has to not happen at all.
+    expect(FLIGHT).toMatch(/useReducedMotion/);
+    expect(FLIGHT).toMatch(/if \(reduceMotion\) return;/);
+  });
+
+  it("never intercepts clicks or reaches a screen reader", () => {
+    expect(FLIGHT).toMatch(/aria-hidden="true"/);
+    const rule = CSS.match(/\.butterfly-flight \{[^}]*\}/)?.[0] ?? "";
+    expect(rule).toMatch(/pointer-events:\s*none/);
+    expect(rule).toMatch(/position:\s*fixed/);
+  });
+
+  it("sits above the header but below the artwork lightbox", () => {
+    // Slice the rule out by hand rather than building a regex from a string:
+    // the escaping needed to survive a selector inside a RegExp constructor is
+    // exactly the kind that silently degrades into a pattern matching nothing.
+    const zIndexOf = (selector: string) => {
+      const start = CSS.indexOf(selector + " {");
+      expect(start, `${selector} rule not found`).toBeGreaterThan(-1);
+      const rule = CSS.slice(start, CSS.indexOf("}", start));
+      const value = rule.match(/z-index:\s*(\d+)/)?.[1];
+      expect(value, `${selector} has no z-index`).toBeDefined();
+      return Number(value);
+    };
+
+    expect(zIndexOf(".butterfly-flight")).toBeGreaterThan(zIndexOf(".site-header"));
+    expect(zIndexOf(".butterfly-flight")).toBeLessThan(zIndexOf(".art-dialog-backdrop"));
+  });
+
+  it("does not block navigation behind the animation", () => {
+    // It reacts to the location having already changed, rather than delaying it.
+    expect(FLIGHT).toMatch(/useLocation/);
+    expect(FLIGHT).toMatch(/\}, \[location, reduceMotion\]\);/);
+    expect(FLIGHT).not.toMatch(/setLocation|navigate\(/);
+  });
+
+  it("is mounted once, app-wide", () => {
+    expect(APP).toMatch(/<ButterflyTransition \/>/);
+    expect(APP).toMatch(/import ButterflyTransition/);
+  });
+});
+
 describe("link previews", () => {
   it("declares the tags a shared link needs", () => {
     for (const tag of [
