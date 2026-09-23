@@ -247,6 +247,13 @@ h1, h2, h3 { font-family: "DM Serif Display", Georgia, serif; font-weight: 400; 
 .project-link-label svg { width: 12px; height: 12px; }
 .project-row > svg { width: 18px; height: 18px; margin-top: 7px; color: var(--teal); transition: transform 160ms ease; }
 .project-row:hover > svg { transform: translate(2px, -2px); }
+.project-url { display: inline-block !important; margin-top: 4px; color: var(--ink-soft) !important; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.58rem !important; letter-spacing: 0.01em; word-break: break-all; }
+.project-note { display: flex !important; align-items: flex-start; gap: 5px; max-width: 46ch; margin-top: 7px; color: var(--ink-soft) !important; font-size: 0.62rem !important; font-style: italic; line-height: 1.5; }
+.project-note svg { flex: 0 0 auto; width: 12px; height: 12px; margin-top: 2px; color: var(--mustard); }
+.project-row.is-private { cursor: default; }
+.project-row.is-private:hover { margin: 0; padding-right: 0; padding-left: 0; background: transparent; }
+.project-row.is-private > svg { color: var(--ink-soft); opacity: 0.48; }
+.project-row.is-private:hover > svg { transform: none; }
 .projects-content > .text-action { margin-top: 1.8rem; }
 
 .contact-section { display: grid; grid-template-columns: 1fr minmax(400px, 0.82fr); gap: clamp(4rem, 9vw, 11rem); padding: 9rem 7vw; color: #fffdf8; background: var(--ink); }
@@ -293,6 +300,15 @@ h1, h2, h3 { font-family: "DM Serif Display", Georgia, serif; font-weight: 400; 
 .footer-links { display: flex; flex-wrap: wrap; gap: 1.4rem; align-items: center; }
 .footer-links a { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; transition: color 160ms ease; }
 .footer-links a:hover { color: var(--teal); }
+
+/* 404: same paper and type as the rest of the site, not the Tailwind scaffold. */
+.notfound-section { display: grid; place-items: center; min-height: 100vh; padding: 6rem 7vw; background: #ece5d9; }
+.notfound-inner { position: relative; max-width: 620px; }
+.notfound-inner h1 { margin-bottom: 1.3rem; font-size: clamp(2.5rem, 6vw, 4.2rem); line-height: 0.98; }
+.notfound-inner h1 em { color: var(--teal); font-style: italic; }
+.notfound-copy { max-width: 480px; margin-bottom: 2rem; color: var(--ink-soft); font-size: 0.94rem; line-height: 1.8; }
+.notfound-actions { display: flex; flex-wrap: wrap; gap: 1rem; }
+.notfound-mark { position: absolute; right: -96px; bottom: -84px; z-index: -1; width: 190px; opacity: 0.17; mix-blend-mode: multiply; transform: rotate(9deg); }
 
 .art-dialog-backdrop { position: fixed; inset: 0; z-index: 70; display: grid; place-items: center; padding: 25px; background: rgba(17, 29, 24, 0.82); backdrop-filter: blur(9px); }
 .art-dialog { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 210px; width: min(820px, 100%); max-height: 90vh; background: var(--paper); box-shadow: 12px 14px 0 rgba(0,0,0,.24); animation: dialog-in 220ms cubic-bezier(.23,1,.32,1) both; }
@@ -401,6 +417,7 @@ h1, h2, h3 { font-family: "DM Serif Display", Georgia, serif; font-weight: 400; 
   .contact-section { gap: 2.7rem; }
   .contact-art { right: -5%; bottom: -59px; width: 170px; }
   .contact-social { grid-template-columns: 1fr; gap: 11px; }
+  .notfound-mark { right: -34px; bottom: -118px; width: 138px; }
   .contact-form { padding: 2rem 1.35rem; }
   .site-footer { display: grid; padding: 2rem 6vw; }
   .footer-brand { align-items: flex-start; }

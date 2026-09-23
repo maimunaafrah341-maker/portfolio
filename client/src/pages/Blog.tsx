@@ -77,14 +77,26 @@ export default function Blog() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    // wouter does not reset scroll between routes, so arriving from the home
-    // page would otherwise drop you halfway down the journal. index.css sets
-    // `html { scroll-behavior: smooth }`, which would turn that reset into a
-    // long visible whoosh -- so switch it off just for this one jump.
+    // index.css sets `html { scroll-behavior: smooth }`, which would turn either
+    // jump below into a long visible whoosh -- switch it off for this one frame.
     const root = document.documentElement;
     const previous = root.style.scrollBehavior;
     root.style.scrollBehavior = "auto";
-    window.scrollTo(0, 0);
+
+    // Every entry carries id={post.slug}, so /blog#hackwave-3-top-20 is meant to
+    // land on that post. React has only just painted, so the browser's own
+    // jump-to-hash had nothing to aim at. Honour it here, and only fall back to
+    // the top-of-page reset when there is no hash -- wouter does not reset
+    // scroll between routes, so without that fallback, arriving from the home
+    // page drops you halfway down the journal.
+    const slug = window.location.hash.slice(1);
+    const target = slug ? document.getElementById(slug) : null;
+    if (target) {
+      target.scrollIntoView({ block: "start" });
+    } else {
+      window.scrollTo(0, 0);
+    }
+
     root.style.scrollBehavior = previous;
   }, []);
 

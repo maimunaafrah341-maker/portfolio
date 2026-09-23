@@ -1,49 +1,53 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { AlertCircle, Home } from "lucide-react";
-import { useLocation } from "wouter";
+/**
+ * Living Sketchbook style: this page used to be the generic scaffold — slate
+ * gradients, a blue button, a pulsing red circle — which read as a different
+ * website entirely. It now uses the same paper, type and buttons as the rest
+ * of the site.
+ *
+ * It also matters more than it used to: before vercel.json added the SPA
+ * rewrite, Vercel served its own 404 and this component was nearly
+ * unreachable. Now every unknown path lands here.
+ */
+import { ArrowUpRight } from "lucide-react";
+import { Link } from "wouter";
 
 export default function NotFound() {
-  const [, setLocation] = useLocation();
-
-  const handleGoHome = () => {
-    setLocation("/");
-  };
-
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
-      <Card className="w-full max-w-lg mx-4 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-        <CardContent className="pt-8 pb-8 text-center">
-          <div className="flex justify-center mb-6">
-            <div className="relative">
-              <div className="absolute inset-0 bg-red-100 rounded-full animate-pulse" />
-              <AlertCircle className="relative h-16 w-16 text-red-500" />
-            </div>
+    <main className="site-shell">
+      <section className="notfound-section">
+        <div className="notfound-inner">
+          <div className="section-marker">
+            <span>?</span>
+            <i>Error 404</i>
           </div>
-
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">404</h1>
-
-          <h2 className="text-xl font-semibold text-slate-700 mb-4">
-            Page Not Found
-          </h2>
-
-          <p className="text-slate-600 mb-8 leading-relaxed">
-            Sorry, the page you are looking for doesn't exist.
-            <br />
-            It may have been moved or deleted.
+          <p className="eyebrow">
+            <span />
+            Page not found
           </p>
-
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button
-              onClick={handleGoHome}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
-            >
-              <Home className="w-4 h-4 mr-2" />
-              Go Home
-            </Button>
+          <h1>
+            This page slipped out of the <em>sketchbook.</em>
+          </h1>
+          <p className="notfound-copy">
+            The link may be old, or the page may have been renamed since it was
+            shared. Everything is still here — start from the portfolio, or read
+            the journal.
+          </p>
+          <div className="notfound-actions">
+            <Link href="/" className="ink-button">
+              Back to the portfolio <ArrowUpRight aria-hidden="true" />
+            </Link>
+            <Link href="/blog" className="ink-button ghost-button">
+              Read the journal <ArrowUpRight aria-hidden="true" />
+            </Link>
           </div>
-        </CardContent>
-      </Card>
-    </div>
+          <img
+            className="notfound-mark"
+            src="/images/butterfly-mark.png"
+            alt=""
+            aria-hidden="true"
+          />
+        </div>
+      </section>
+    </main>
   );
 }

@@ -11,6 +11,8 @@ import {
   Github,
   Instagram,
   Linkedin,
+  Info,
+  Lock,
   Mail,
   Menu,
   MoveUpRight,
@@ -166,15 +168,32 @@ const artwork: Artwork[] = [
   },
 ];
 
-const projects = [
+type Project = {
+  kind: string;
+  title: string;
+  summary: string;
+  technologies: string[];
+  /**
+   * Left off for work that is not public yet. The row then renders as plain
+   * text rather than a link, and `note` explains why.
+   */
+  href?: string;
+  linkLabel?: string;
+  /** Small caveat under the link -- a free-tier cold start, a private repo. */
+  note?: string;
+  featured?: boolean;
+};
+
+const projects: Project[] = [
   {
     kind: "Active build",
     title: "Athena",
     summary:
       "A multilingual retrieval and safety assistant shaped around careful understanding, risk signals, and human-centred response.",
     technologies: ["Python", "Multilingual RAG", "HTML / CSS / JS"],
-    href: "https://github.com/maimunaafrah341-maker/Athena",
-    linkLabel: "View source",
+    // Deliberately no href: still in development for Smart India Hackathon, so
+    // the repo stays private. Add href + linkLabel back when it is ready.
+    note: "Kept private while it is still in development for Smart India Hackathon.",
     featured: true,
   },
   {
@@ -214,6 +233,7 @@ const projects = [
     technologies: ["Flask", "ReportLab", "SQLite"],
     href: "https://ff-01-s5.onrender.com/",
     linkLabel: "Open live demo",
+    note: "Hosted on Render's free tier, so the first visit can take up to a minute while the server wakes up.",
   },
   {
     kind: "Learning tool",
@@ -223,6 +243,7 @@ const projects = [
     technologies: ["JavaScript", "AI learning"],
     href: "https://study-with-mimi.onrender.com/",
     linkLabel: "Open live demo",
+    note: "Hosted on Render's free tier, so the first visit can take up to a minute while the server wakes up.",
   },
 ];
 
@@ -530,27 +551,57 @@ export default function Home() {
           {/* The list inherits "visible" from .projects-content above, so it needs
               no viewport of its own -- it only adds the stagger between rows. */}
           <motion.div className="project-list" variants={revealStagger}>
-            {projects.map((project, index) => (
-              <motion.a
-                className={`project-row ${project.featured ? "featured-project" : ""}`}
-                href={project.href}
-                target="_blank"
-                rel="noreferrer"
-                key={project.title}
-                variants={revealChild}
-                whileHover={{ y: -3, transition: { type: "spring", stiffness: 380, damping: 26 } }}
-              >
-                <span className="project-index">0{index + 1}</span>
-                <span className="project-body">
-                  <small>{project.kind}</small>
-                  <strong>{project.title}</strong>
-                  <span>{project.summary}</span>
-                  <span className="tech-list">{project.technologies.map((tech) => <em key={tech}>{tech}</em>)}</span>
-                  <span className="project-link-label">{project.linkLabel} <ArrowUpRight aria-hidden="true" /></span>
-                </span>
-                <ArrowUpRight aria-hidden="true" />
-              </motion.a>
-            ))}
+            {projects.map((project, index) => {
+              const body = (
+                <>
+                  <span className="project-index">0{index + 1}</span>
+                  <span className="project-body">
+                    <small>{project.kind}</small>
+                    <strong>{project.title}</strong>
+                    <span>{project.summary}</span>
+                    <span className="tech-list">{project.technologies.map((tech) => <em key={tech}>{tech}</em>)}</span>
+                    {/* Show the address itself for hosted demos. Skipped for GitHub
+                        links, where "github.com" adds nothing to "View source". */}
+                    {project.href && !project.href.includes("github.com") && (
+                      <span className="project-url">{new URL(project.href).host}</span>
+                    )}
+                    {project.href && (
+                      <span className="project-link-label">{project.linkLabel} <ArrowUpRight aria-hidden="true" /></span>
+                    )}
+                    {project.note && (
+                      <span className="project-note"><Info aria-hidden="true" />{project.note}</span>
+                    )}
+                  </span>
+                </>
+              );
+
+              // A project with no href must not render as an anchor: an <a> with
+              // no href is not keyboard focusable and announces as plain text,
+              // so it would look interactive without being so.
+              return project.href ? (
+                <motion.a
+                  className={`project-row ${project.featured ? "featured-project" : ""}`}
+                  href={project.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  key={project.title}
+                  variants={revealChild}
+                  whileHover={{ y: -3, transition: { type: "spring", stiffness: 380, damping: 26 } }}
+                >
+                  {body}
+                  <ArrowUpRight aria-hidden="true" />
+                </motion.a>
+              ) : (
+                <motion.div
+                  className={`project-row is-private ${project.featured ? "featured-project" : ""}`}
+                  key={project.title}
+                  variants={revealChild}
+                >
+                  {body}
+                  <Lock aria-hidden="true" />
+                </motion.div>
+              );
+            })}
           </motion.div>
           <a className="text-action" href="https://github.com/maimunaafrah341-maker?tab=repositories" target="_blank" rel="noreferrer">
             Read the full project index <ChevronRight aria-hidden="true" />

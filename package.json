@@ -8,6 +8,7 @@
     "build": "vite build",
     "start": "vite preview --host",
     "preview": "vite preview --host",
+    "test": "vitest run",
     "format": "prettier --write ."
   },
   "dependencies": {
