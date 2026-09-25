@@ -6,7 +6,7 @@ import { MotionConfig } from "framer-motion";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import ButterflyTransition from "./components/ButterflyTransition";
+import { PageTransitionProvider } from "./components/PageTransition";
 import Blog from "./pages/Blog";
 import Home from "./pages/Home";
 
@@ -30,13 +30,14 @@ function App() {
             still cross-fades, nothing slides. index.css already does the same
             for its CSS animations. One place, whole app. */}
         <MotionConfig reducedMotion="user">
-          <TooltipProvider>
-            <Toaster />
-            <Router />
-            {/* Sits outside Router on purpose: it watches the location itself,
-                so it survives the page swap it is animating over. */}
-            <ButterflyTransition />
-          </TooltipProvider>
+          {/* Owns navigation for internal links: the route changes only once
+              the butterflies have the screen covered. */}
+          <PageTransitionProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Router />
+            </TooltipProvider>
+          </PageTransitionProvider>
         </MotionConfig>
       </ThemeProvider>
     </ErrorBoundary>

@@ -21,7 +21,9 @@ import {
   X,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { Link } from "wouter";
+// Aliased so every internal link on the page routes through the butterfly
+// page-turn instead of navigating instantly.
+import { ButterflyLink as Link } from "@/components/PageTransition";
 import { revealChild, revealStagger, revealUp, viewportOnce } from "@/lib/motion";
 
 type ArtCategory = "all" | "watercolour" | "islamic" | "fanart" | "pencil" | "ink";

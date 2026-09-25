@@ -310,11 +310,15 @@ h1, h2, h3 { font-family: "DM Serif Display", Georgia, serif; font-weight: 400; 
 .notfound-actions { display: flex; flex-wrap: wrap; gap: 1rem; }
 .notfound-mark { position: absolute; right: -96px; bottom: -84px; z-index: -1; width: 190px; opacity: 0.17; mix-blend-mode: multiply; transform: rotate(9deg); }
 
-/* Page transition: a flock crossing the paper while the route changes.
-   z-index 60 puts them over the fixed header (40) but under the artwork
-   lightbox (70), and pointer-events: none keeps them from eating clicks. */
-.butterfly-flight { position: fixed; inset: 0; z-index: 60; overflow: hidden; pointer-events: none; }
-.butterfly-flight > span { position: absolute; left: 0; display: block; will-change: transform, opacity; }
+/* Page turn: a sheet of paper carried across by butterflies. It covers the
+   screen, the route changes underneath, then it keeps going and uncovers the
+   new page. z-index 80 is above everything including the artwork lightbox,
+   and pointer-events are live so a second click cannot land mid-sweep. */
+.page-turn { position: fixed; inset: 0; z-index: 80; will-change: transform; }
+.page-turn-sheet { position: absolute; inset: 0; background: linear-gradient(90deg, var(--paper) 0%, var(--paper) 86%, rgba(245, 240, 230, 0.95) 94%, rgba(245, 240, 230, 0) 100%); }
+/* the same dot texture the page itself uses, so the sheet reads as paper */
+.page-turn-sheet::after { position: absolute; inset: 0; content: ""; opacity: 0.24; background-image: radial-gradient(rgba(25, 38, 33, 0.23) 0.45px, transparent 0.55px); background-size: 5px 5px; }
+.page-turn-flyer { position: absolute; display: block; will-change: transform; }
 
 .art-dialog-backdrop { position: fixed; inset: 0; z-index: 70; display: grid; place-items: center; padding: 25px; background: rgba(17, 29, 24, 0.82); backdrop-filter: blur(9px); }
 .art-dialog { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 210px; width: min(820px, 100%); max-height: 90vh; background: var(--paper); box-shadow: 12px 14px 0 rgba(0,0,0,.24); animation: dialog-in 220ms cubic-bezier(.23,1,.32,1) both; }

@@ -9,7 +9,9 @@
  * unreachable. Now every unknown path lands here.
  */
 import { ArrowUpRight } from "lucide-react";
-import { Link } from "wouter";
+// Aliased so every internal link on the page routes through the butterfly
+// page-turn instead of navigating instantly.
+import { ButterflyLink as Link } from "@/components/PageTransition";
 
 export default function NotFound() {
   return (

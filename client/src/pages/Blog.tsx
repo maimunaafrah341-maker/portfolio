@@ -10,7 +10,9 @@
  */
 import { useEffect, useState } from "react";
 import { ArrowUpRight, Menu, PenLine, X } from "lucide-react";
-import { Link } from "wouter";
+// Aliased so every internal link on the page routes through the butterfly
+// page-turn instead of navigating instantly.
+import { ButterflyLink as Link } from "@/components/PageTransition";
 import { motion } from "framer-motion";
 import { revealChild, revealStagger, revealUp, viewportOnce } from "@/lib/motion";
 import { posts } from "@/content/posts";

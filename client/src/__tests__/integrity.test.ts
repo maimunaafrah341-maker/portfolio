@@ -37,6 +37,14 @@ const POSTS = read("client/src/content/posts.ts");
  * a doc comment mentioning `<time dateTime>` — and matching those is a false
  * positive every time.
  */
+function section(source: string, from: string, to: string): string {
+  const start = source.indexOf(from);
+  const end = source.indexOf(to, start + from.length);
+  if (start < 0) throw new Error(`section start not found: ${from}`);
+  if (end < 0) throw new Error(`section end not found after start: ${to}`);
+  return source.slice(start, end);
+}
+
 function stripComments(source: string): string {
   return source
     .replace(/\{\/\*[\s\S]*?\*\/\}/g, "")
@@ -198,24 +206,59 @@ describe("journal", () => {
 });
 
 describe("page transition", () => {
-  const FLIGHT = read("client/src/components/ButterflyTransition.tsx");
+  const TURN = read("client/src/components/PageTransition.tsx");
   const CSS = read("client/src/index.css");
 
+  it("covers the screen, swaps the route, then uncovers", () => {
+    // The whole point: the new page must not be visible arriving. An earlier
+    // version flew butterflies over a page that had already loaded, which is
+    // a decoration rather than a transition.
+    const navigate = section(TURN, "const navigate = useCallback", "/** Screen is fully covered");
+    const covered = section(TURN, "const handleCovered", "<NavigateContext.Provider");
+
+    // Clicking a link starts the sweep; it does not navigate.
+    expect(navigate).toMatch(/setPhase\("covering"\)/);
+    // ...except when motion is reduced, where it goes straight there.
+    expect(navigate).toMatch(/if \(reduceMotion\) \{[\s\S]*?setLocation\(href\);/);
+
+    // The route changes only once the paper has the screen covered.
+    expect(covered).toMatch(/setLocation\(href\)/);
+    expect(covered).toMatch(/setPhase\("revealing"\)/);
+  });
+
+  it("moves slowly enough to read as a page being turned", () => {
+    // Encoded from direct feedback: the first version glided across too fast.
+    const seconds = (name: string) =>
+      Number(TURN.match(new RegExp("const " + name + " = ([0-9.]+);"))?.[1]);
+    expect(seconds("COVER_SECONDS")).toBeGreaterThanOrEqual(0.9);
+    expect(seconds("REVEAL_SECONDS")).toBeGreaterThanOrEqual(0.9);
+  });
+
+  it("draws butterflies big enough to see", () => {
+    // Also from feedback: the first flock was too small.
+    const sizes = [...TURN.matchAll(/size: (\d+)/g)].map(m => Number(m[1]));
+    expect(sizes.length).toBeGreaterThan(5);
+    expect(Math.min(...sizes)).toBeGreaterThanOrEqual(36);
+    expect(Math.max(...sizes)).toBeGreaterThanOrEqual(60);
+  });
+
   it("is skipped entirely under prefers-reduced-motion", () => {
-    // MotionConfig reducedMotion="user" only strips transforms; a flock
-    // sweeping the whole viewport has to not happen at all.
-    expect(FLIGHT).toMatch(/useReducedMotion/);
-    expect(FLIGHT).toMatch(/if \(reduceMotion\) return;/);
+    // MotionConfig reducedMotion="user" only strips transforms; a two-second
+    // covered sweep has to not happen at all.
+    expect(TURN).toMatch(/useReducedMotion/);
+    expect(TURN).toMatch(/if \(reduceMotion\)/);
   });
 
-  it("never intercepts clicks or reaches a screen reader", () => {
-    expect(FLIGHT).toMatch(/aria-hidden="true"/);
-    const rule = CSS.match(/\.butterfly-flight \{[^}]*\}/)?.[0] ?? "";
-    expect(rule).toMatch(/pointer-events:\s*none/);
-    expect(rule).toMatch(/position:\s*fixed/);
+  it("leaves new-tab clicks alone", () => {
+    // Hijacking cmd/ctrl-click would be worse than having no animation.
+    const handler = section(TURN, "const handleClick", "return (");
+    for (const key of ["metaKey", "ctrlKey", "shiftKey", "altKey"]) {
+      expect(handler, `handleClick should bail on ${key}`).toContain(key);
+    }
+    expect(handler).toMatch(/event\.button !== 0/);
   });
 
-  it("sits above the header but below the artwork lightbox", () => {
+  it("covers everything, including the artwork lightbox", () => {
     // Slice the rule out by hand rather than building a regex from a string:
     // the escaping needed to survive a selector inside a RegExp constructor is
     // exactly the kind that silently degrades into a pattern matching nothing.
@@ -228,20 +271,26 @@ describe("page transition", () => {
       return Number(value);
     };
 
-    expect(zIndexOf(".butterfly-flight")).toBeGreaterThan(zIndexOf(".site-header"));
-    expect(zIndexOf(".butterfly-flight")).toBeLessThan(zIndexOf(".art-dialog-backdrop"));
+    expect(zIndexOf(".page-turn")).toBeGreaterThan(zIndexOf(".site-header"));
+    expect(zIndexOf(".page-turn")).toBeGreaterThan(zIndexOf(".art-dialog-backdrop"));
   });
 
-  it("does not block navigation behind the animation", () => {
-    // It reacts to the location having already changed, rather than delaying it.
-    expect(FLIGHT).toMatch(/useLocation/);
-    expect(FLIGHT).toMatch(/\}, \[location, reduceMotion\]\);/);
-    expect(FLIGHT).not.toMatch(/setLocation|navigate\(/);
+  it("is mounted once, wrapping the whole app", () => {
+    expect(APP).toMatch(/<PageTransitionProvider>/);
+    expect(APP).toMatch(/import \{ PageTransitionProvider \}/);
   });
 
-  it("is mounted once, app-wide", () => {
-    expect(APP).toMatch(/<ButterflyTransition \/>/);
-    expect(APP).toMatch(/import ButterflyTransition/);
+  it("routes every internal link through it", () => {
+    // Each page aliases ButterflyLink as Link, so no page should still be
+    // importing wouter's Link and navigating instantly.
+    for (const [name, source] of [["Home", HOME], ["Blog", BLOG], ["NotFound", NOTFOUND]] as const) {
+      expect(source, `${name} should not import wouter's Link`).not.toMatch(
+        /import \{ Link \} from "wouter"/
+      );
+      expect(source, `${name} should use ButterflyLink`).toMatch(
+        /import \{ ButterflyLink as Link \}/
+      );
+    }
   });
 });
 
