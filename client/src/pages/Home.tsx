@@ -51,7 +51,7 @@ const featuredStories = [
     number: "02",
     title: "Nostalgia",
     description:
-      "A playful illustrated moment published in HashtagKalakar — memory, humour, and pop culture in one frame.",
+      "A playful illustrated moment published in HashtagKalakar: memory, humour, and pop culture in one frame.",
     image: "/images/nostalgia-feature.jpeg",
     alt: "HashtagKalakar magazine page showing Maimuna Afrah's Nostalgia artwork",
     palette: "blue",
@@ -366,7 +366,7 @@ export default function Home() {
             <span>in the same sketchbook.</span>
           </h1>
           <p className="hero-intro">
-            I am <strong>Maimuna Afrah</strong> — an artist and AI & ML student exploring what happens when handmade feeling meets thoughtful technology.
+            I am <strong>Maimuna Afrah</strong>, an artist and AI & ML student exploring what happens when handmade feeling meets thoughtful technology.
           </p>
           <div className="hero-actions">
             <button className="ink-button" onClick={() => navigateTo("features")}>
@@ -440,6 +440,49 @@ export default function Home() {
         {/* <img className="about-constellation" src="/images/ink-constellation.jpg" alt="" aria-hidden="true" /> */}
       </section>
 
+      {/* The one piece of writing on the site that is Maimuna's own rather than
+          drafted for her. It sits here, straight after About and before the
+          artwork, because it explains the butterfly a visitor is about to meet
+          everywhere -- the mark, the page turn, and half the drawings. */}
+      <section className="essay-section section-anchor" id="butterflies">
+        <motion.div
+          className="essay-inner"
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
+          variants={revealUp}
+        >
+          <div className="section-marker"><span>02</span><i>Why butterflies</i></div>
+          <h2>Why a <em>butterfly.</em></h2>
+          <div className="essay-body">
+            <p>
+              As a child, I have always associated myself with butterflies, finding
+              them rather captivating and interesting. I love to draw them spreading
+              their wings as high as they can.
+            </p>
+            <p>
+              The question arises: why? Why do I love them? Why do I associate myself
+              with them?
+            </p>
+            <p>
+              Freedom has always been symbolised by a bird. For me, it was this tiny
+              insect.
+            </p>
+            <p>
+              The answer to those whys was simple. Their lives before were so simple,
+              yet devoid of colour: no freedom to spread their wings, no freedom from
+              the sickness of discrimination and societal standards.
+            </p>
+            <p>
+              Yet when the worm finally got to rest, and finally became indifferent to
+              its surroundings, it shone brighter than ever.{" "}
+              <em>Because it was in the process of becoming free.</em>
+            </p>
+          </div>
+        </motion.div>
+        <img className="essay-mark" src="/images/butterfly-mark.png" alt="" aria-hidden="true" />
+      </section>
+
       <section className="feature-section section-anchor" id="features">
         <motion.div
           className="feature-intro"
@@ -448,7 +491,7 @@ export default function Home() {
           viewport={viewportOnce}
           variants={revealUp}
         >
-          <div className="section-marker"><span>02</span><i>Selected press</i></div>
+          <div className="section-marker"><span>03</span><i>Selected press</i></div>
           <p className="eyebrow">As seen in HashtagKalakar</p>
           <h2>Three pages from a growing <em>visual voice.</em></h2>
           <p>
@@ -488,7 +531,7 @@ export default function Home() {
           variants={revealUp}
         >
           <div>
-            <div className="section-marker"><span>03</span><i>Artwork archive</i></div>
+            <div className="section-marker"><span>04</span><i>Artwork archive</i></div>
             <p className="eyebrow">Original works</p>
             <h2>Small worlds, <em>drawn close.</em></h2>
           </div>
@@ -544,7 +587,7 @@ export default function Home() {
           viewport={viewportOnce}
           variants={revealUp}
         >
-          <div className="section-marker"><span>04</span><i>Project notebook</i></div>
+          <div className="section-marker"><span>05</span><i>Project notebook</i></div>
           <p className="eyebrow">Creative technology</p>
           <h2>Ideas that want to become <em>useful.</em></h2>
           <p className="projects-intro">
@@ -619,7 +662,7 @@ export default function Home() {
           viewport={viewportOnce}
           variants={revealUp}
         >
-          <div className="section-marker"><span>05</span><i>Start a conversation</i></div>
+          <div className="section-marker"><span>06</span><i>Start a conversation</i></div>
           <p className="eyebrow">Let’s make something attentive</p>
           <h2>Have a thought worth <em>drawing out?</em></h2>
           <p>
@@ -682,7 +725,7 @@ export default function Home() {
       <footer className="site-footer">
         <div className="footer-brand">
           <img src="/images/butterfly-mark.png" alt="" aria-hidden="true" />
-          <span>Maimuna Afrah <em>— creative technology portfolio</em></span>
+          <span>Maimuna Afrah <em>· creative technology portfolio</em></span>
         </div>
         <div className="footer-links">
           <a href="https://github.com/maimunaafrah341-maker" target="_blank" rel="noreferrer">GitHub</a>

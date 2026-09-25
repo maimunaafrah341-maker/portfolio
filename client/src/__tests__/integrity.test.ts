@@ -205,6 +205,37 @@ describe("journal", () => {
   });
 });
 
+describe("prose", () => {
+  it("uses no em dashes in anything a visitor reads", () => {
+    // A stated preference. Comments and internal docs are left alone; this is
+    // about the rendered page, the tab title and the link-preview text.
+    const EM_DASH = "\u2014";
+    for (const [name, source] of [
+      ["Home", stripComments(HOME)],
+      ["Blog", stripComments(BLOG)],
+      ["NotFound", stripComments(NOTFOUND)],
+      ["posts", stripComments(POSTS)],
+      ["index.html", INDEX_HTML.replace(/<!--[\s\S]*?-->/g, "")],
+    ] as const) {
+      expect(source, `${name} should contain no em dash`).not.toContain(EM_DASH);
+    }
+  });
+
+  it("numbers the home page sections in order with no gaps", () => {
+    // Inserting the butterflies section pushed every later number along by one.
+    const numbers = [...HOME.matchAll(/<span>(\d{2})<\/span><i>/g)].map(m => Number(m[1]));
+    expect(numbers.length).toBeGreaterThanOrEqual(6);
+    expect(numbers).toEqual(numbers.map((_, i) => i + 1));
+  });
+
+  it("keeps the butterfly piece on the home page", () => {
+    // The one piece of writing here that is hers rather than drafted for her.
+    expect(HOME).toMatch(/id="butterflies"/);
+    expect(HOME).toMatch(/Freedom has always been symbolised by a bird/);
+    expect(HOME).toMatch(/in the process of becoming free/);
+  });
+});
+
 describe("page transition", () => {
   const TURN = read("client/src/components/PageTransition.tsx");
   const CSS = read("client/src/index.css");

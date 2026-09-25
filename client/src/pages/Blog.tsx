@@ -166,7 +166,7 @@ export default function Blog() {
       <footer className="site-footer">
         <div className="footer-brand">
           <img src="/images/butterfly-mark.png" alt="" aria-hidden="true" />
-          <span>Maimuna Afrah <em>— creative technology portfolio</em></span>
+          <span>Maimuna Afrah <em>· creative technology portfolio</em></span>
         </div>
         <div className="footer-links">
           <Link href="/">Portfolio</Link>

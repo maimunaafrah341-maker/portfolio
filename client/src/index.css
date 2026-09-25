@@ -175,6 +175,19 @@ h1, h2, h3 { font-family: "DM Serif Display", Georgia, serif; font-weight: 400; 
 .text-action svg { width: 15px; height: 15px; }
 .about-constellation { position: absolute; right: -5%; bottom: -20px; width: min(480px, 45vw); opacity: 0.13; mix-blend-mode: multiply; transform: rotate(7deg); }
 
+/* An interlude: the one piece of writing that explains the mark. Set in the
+   display serif at reading size, so it carries more weight than body copy
+   without shouting like a heading. */
+.essay-section { position: relative; overflow: hidden; padding: 7.5rem 7vw 8rem; background: var(--paper-deep); }
+.essay-inner { position: relative; z-index: 1; max-width: 680px; }
+.essay-inner h2 { margin-bottom: 2.1rem; font-size: clamp(2.3rem, 4vw, 3.5rem); line-height: 1; }
+.essay-inner h2 em { color: var(--teal); font-style: italic; }
+.essay-body { border-left: 1px solid rgba(13, 107, 103, 0.3); padding-left: clamp(1.2rem, 3vw, 2.4rem); }
+.essay-body p { margin: 0 0 1.35rem; color: #33443a; font-family: "DM Serif Display", Georgia, serif; font-size: clamp(1.06rem, 1.5vw, 1.3rem); line-height: 1.68; letter-spacing: -0.01em; }
+.essay-body p:last-child { margin-bottom: 0; }
+.essay-body em { color: var(--teal); font-style: italic; }
+.essay-mark { position: absolute; right: -3%; bottom: -7%; width: min(260px, 40vw); opacity: 0.13; mix-blend-mode: multiply; transform: rotate(-8deg); }
+
 .feature-section { padding: 8.5rem 7vw 9rem; background: var(--ink); color: #fffdf8; }
 .feature-section .section-marker { color: rgba(255, 253, 248, 0.62); }
 .feature-intro { display: grid; grid-template-columns: 1.1fr 0.8fr; column-gap: 12vw; align-items: end; max-width: 1220px; margin-bottom: 4.5rem; }
@@ -402,6 +415,8 @@ h1, h2, h3 { font-family: "DM Serif Display", Georgia, serif; font-weight: 400; 
   .hero-visual { width: calc(100% - 13px); }
   .hero-caption { right: -8px; bottom: -15px; }
   .about-section, .feature-section, .art-section, .contact-section { padding: 6.5rem 6vw; }
+  .essay-section { padding: 5.5rem 6vw 6rem; }
+  .essay-mark { right: -8%; bottom: -4%; width: 150px; }
   .section-marker { margin-bottom: 1.1rem; }
   .about-title h2, .feature-intro h2, .art-intro h2, .projects-content h2, .contact-copy h2 { font-size: clamp(2.55rem, 12vw, 3.4rem); }
   .about-constellation { width: 80vw; right: -22%; bottom: -50px; }

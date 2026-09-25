@@ -31,7 +31,7 @@ export default function NotFound() {
           </h1>
           <p className="notfound-copy">
             The link may be old, or the page may have been renamed since it was
-            shared. Everything is still here — start from the portfolio, or read
+            shared. Everything is still here. Start from the portfolio, or read
             the journal.
           </p>
           <div className="notfound-actions">
