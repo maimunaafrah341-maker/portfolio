@@ -364,6 +364,26 @@ const filters: Array<{ id: ArtCategory; label: string }> = [
   { id: "lettering", label: "Lettering" },
 ];
 
+/**
+ * Where the contact form posts.
+ *
+ * WHILE THIS IS EMPTY the form falls back to opening the visitor's mail app,
+ * which is what it always did, and which silently does nothing for anyone
+ * without a mail client set up. On a phone browser or a locked-down work
+ * laptop, pressing send just does not work, and nobody finds out.
+ *
+ * To make it deliver for real:
+ *   1. Make a free form at https://formspree.io (50 messages a month)
+ *   2. It gives you an endpoint like https://formspree.io/f/abcdwxyz
+ *   3. Paste it between the quotes below, commit, push. That is the whole job.
+ *
+ * The endpoint is meant to be public, so there is no secret here to protect.
+ * Web3Forms works too, but it also wants a hidden `access_key` input.
+ */
+const CONTACT_FORM_ENDPOINT = "";
+
+type SendState = "idle" | "sending" | "sent" | "error";
+
 const contactEmail = "just.m.trying@gmail.com";
 
 function scrollToSection(sectionId: string) {
@@ -397,7 +417,7 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<ArtCategory>("all");
   const [preview, setPreview] = useState<Artwork | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
+  const [sendState, setSendState] = useState<SendState>("idle");
 
   // Arriving from the journal via an anchor such as "/#contact": React has only
   // just painted, so the browser's own jump-to-hash had nothing to aim at yet.
@@ -419,19 +439,44 @@ export default function Home() {
     };
   }, []);
 
-  const handleContact = (event: FormEvent<HTMLFormElement>) => {
+  const handleContact = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // Read the element now: after the first await, React may have cleared
+    // currentTarget, but this plain reference stays valid.
     const form = event.currentTarget;
     const values = new FormData(form);
-    const name = String(values.get("name") ?? "");
-    const senderEmail = String(values.get("email") ?? "");
-    const message = String(values.get("message") ?? "");
-    const subject = `Portfolio enquiry from ${name}`;
-    const body = `Hello Maimuna,\n\n${message}\n\nFrom: ${name}\nReply to: ${senderEmail}`;
 
-    window.location.href = `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    setNotice("Your email app should now open with this note addressed to Maimuna.");
-    form.reset();
+    // Honeypot. People never see this field, so anything in it is a bot.
+    if (values.get("company")) return;
+
+    if (!CONTACT_FORM_ENDPOINT) {
+      const name = String(values.get("name") ?? "");
+      const senderEmail = String(values.get("email") ?? "");
+      const message = String(values.get("message") ?? "");
+      const subject = `Portfolio enquiry from ${name}`;
+      const body = `Hello Maimuna,\n\n${message}\n\nFrom: ${name}\nReply to: ${senderEmail}`;
+
+      window.location.href = `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      form.reset();
+      setSendState("sent");
+      return;
+    }
+
+    setSendState("sending");
+    try {
+      const response = await fetch(CONTACT_FORM_ENDPOINT, {
+        method: "POST",
+        body: values,
+        headers: { Accept: "application/json" },
+      });
+      if (!response.ok) throw new Error(`Contact endpoint returned ${response.status}`);
+      form.reset();
+      setSendState("sent");
+    } catch {
+      // Never swallow this: the visitor has to know the message did not send,
+      // and needs somewhere else to put it.
+      setSendState("error");
+    }
   };
 
   const navigateTo = (id: string) => {
@@ -798,9 +843,48 @@ export default function Home() {
             <span>Your message</span>
             <textarea required name="message" rows={5} placeholder="Tell me about the idea, question, or collaboration…" />
           </label>
-          <button className="ink-button form-button" type="submit">Leave a note <Send aria-hidden="true" /></button>
-          <p className="form-caption"><Mail aria-hidden="true" />Submitting opens your email app with a prefilled note addressed to Maimuna.</p>
-          {notice && <p className="form-notice" role="status">{notice}</p>}
+
+          {/* Off-screen rather than display:none, which some bots skip. */}
+          <input
+            className="form-honeypot"
+            type="text"
+            name="company"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+          />
+
+          <button
+            className="ink-button form-button"
+            type="submit"
+            disabled={sendState === "sending"}
+          >
+            {sendState === "sending" ? "Sending…" : "Leave a note"} <Send aria-hidden="true" />
+          </button>
+
+          <p className="form-caption">
+            <Mail aria-hidden="true" />
+            {CONTACT_FORM_ENDPOINT
+              ? "Your note comes straight to my inbox, and I reply from there."
+              : "Submitting opens your email app with a prefilled note addressed to Maimuna."}
+          </p>
+
+          {/* Kept mounted so a screen reader announces the change rather than
+              the whole region appearing from nowhere. */}
+          <div className="form-status" role="status" aria-live="polite">
+            {sendState === "sent" && (
+              <p className="form-notice">
+                Thank you, your note is with me. I will reply as soon as I can.
+              </p>
+            )}
+            {sendState === "error" && (
+              <p className="form-notice is-error">
+                That did not send. Please email me directly at{" "}
+                <a href={`mailto:${contactEmail}`}>{contactEmail}</a>, and I will
+                pick it up there.
+              </p>
+            )}
+          </div>
         </motion.form>
       </section>
 

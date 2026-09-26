@@ -31,6 +31,7 @@ const APP = read("client/src/App.tsx");
 const INDEX_HTML = read("client/index.html");
 const POSTS = read("client/src/content/posts.ts");
 const ABOUT = read("client/src/pages/About.tsx");
+const CSS_FILE = read("client/src/index.css");
 
 /**
  * Drop comments before asserting on source. Comments legitimately contain the
@@ -146,6 +147,54 @@ describe("contact details", () => {
     expect(contact).toMatch(/linkedin\.com/);
     expect(contact).toMatch(/instagram\.com/);
     expect(contact).toMatch(/pinterest\.com/);
+  });
+});
+
+describe("contact form", () => {
+  const handler = section(HOME, "const handleContact", "const navigateTo");
+
+  it("posts to an endpoint rather than only opening a mail app", () => {
+    // mailto silently does nothing for a visitor with no mail client, and the
+    // sender never finds out the message was lost.
+    expect(handler).toMatch(/await fetch\(CONTACT_FORM_ENDPOINT/);
+    expect(handler).toMatch(/method: "POST"/);
+  });
+
+  it("still works before the endpoint is configured", () => {
+    // CONTACT_FORM_ENDPOINT ships empty, so the old mailto path has to remain
+    // as the fallback rather than the form doing nothing at all.
+    expect(handler).toMatch(/if \(!CONTACT_FORM_ENDPOINT\)/);
+    expect(handler).toMatch(/mailto:\$\{contactEmail\}/);
+  });
+
+  it("never swallows a send failure", () => {
+    // The one outcome that must never be silent.
+    expect(handler).toMatch(/setSendState\("error"\)/);
+    expect(handler).toMatch(/if \(!response\.ok\) throw/);
+
+    // and the error state has to give the visitor somewhere else to go
+    const form = section(HOME, 'className="form-status"', "</motion.form>");
+    expect(form).toMatch(/is-error/);
+    expect(form).toMatch(/mailto:\$\{contactEmail\}/);
+  });
+
+  it("reports sending, and cannot be double-submitted", () => {
+    const form = section(HOME, "<motion.form", "</motion.form>");
+    expect(form).toMatch(/disabled=\{sendState === "sending"\}/);
+    expect(form).toMatch(/sendState === "sending" \? "Sending/);
+    expect(form).toMatch(/aria-live="polite"/);
+  });
+
+  it("carries a honeypot that real people cannot fill", () => {
+    const form = section(HOME, "<motion.form", "</motion.form>");
+    expect(form).toMatch(/name="company"/);
+    expect(form).toMatch(/tabIndex=\{-1\}/);
+    expect(handler).toMatch(/values\.get\("company"\)/);
+
+    // off-screen, not display:none, which some bots skip
+    const rule = CSS_FILE.match(/\.form-honeypot \{[^}]*\}/)?.[0] ?? "";
+    expect(rule).toMatch(/left: -9999px/);
+    expect(rule).not.toMatch(/display:\s*none/);
   });
 });
 

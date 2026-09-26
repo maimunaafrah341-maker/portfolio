@@ -321,6 +321,12 @@ h1, h2, h3 { font-family: "DM Serif Display", Georgia, serif; font-weight: 400; 
 .form-caption svg { flex: 0 0 auto; width: 14px; margin-top: 1px; color: var(--teal); }
 .form-notice { margin: 0; padding: 9px 10px; color: var(--teal); border-left: 2px solid var(--teal); background: var(--teal-pale); font-size: 0.68rem; line-height: 1.55; }
 
+.form-honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.form-status:empty { display: none; }
+.form-notice.is-error { color: var(--rose); border-left-color: var(--rose); background: rgba(182, 88, 77, 0.12); }
+.form-notice a { border-bottom: 1px solid currentColor; }
+.ink-button:disabled { opacity: 0.62; cursor: progress; transform: none; box-shadow: 4px 4px 0 var(--mustard); }
+
 .site-footer { display: flex; align-items: center; justify-content: space-between; gap: 2rem; padding: 2rem 7vw; background: #e7ded1; }
 .footer-brand { display: inline-flex; align-items: center; gap: 8px; font-family: "DM Serif Display", Georgia, serif; font-size: 1.1rem; }
 .footer-brand img { width: 35px; height: 35px; object-fit: contain; }
