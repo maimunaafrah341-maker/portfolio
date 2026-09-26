@@ -169,9 +169,8 @@ const artwork: Artwork[] = [
     alt: "Detailed graphite drawing of a warrior holding a sword",
   },
   {
-    // Most titles here are Maimuna's. Still Claude's suggestions, pending her
-    // own: "Every Life We Touch" and "Ballpoint Study". Rename freely --
-    // nothing else depends on them.
+    // Titles are Maimuna's, except "Every Life We Touch" and "Ballpoint Study",
+    // which she reviewed and chose to keep as they are.
     title: "Ramadan Mubarak",
     category: "lettering",
     medium: "Brush pen & gouache",
@@ -246,6 +245,51 @@ type Project = {
   note?: string;
   featured?: boolean;
 };
+
+
+/**
+ * Technical recognition. Each entry is taken verbatim from a certificate or
+ * from a reported result -- participation is described as participation, not
+ * as a placing. Two certificates were deliberately left out: a blank
+ * Design-a-thon template with no details filled in, and a one-hour workshop.
+ */
+const credentials = [
+  {
+    when: "Sept 2026",
+    title: "Top 20 of 126 teams",
+    issuer: "Hackwave 3.0",
+    detail:
+      "For HazardWatch OS, an industrial incident console built over two days.",
+  },
+  {
+    when: "Aug 2026",
+    title: "Bug Hunt 2026",
+    issuer: "Forge Alumnus Services",
+    detail:
+      "Recognised for debugging, analytical thinking, and problem-solving.",
+  },
+  {
+    when: "Aug 2026",
+    title: "Ignite, 42 hours of coursework",
+    issuer: "Wadhwani Foundation, with WE Hub Telangana",
+    detail:
+      "Ideation, business modelling, and financial planning, on the Women Entrepreneurs programme.",
+  },
+  {
+    when: "Apr 2026",
+    title: "GenAI Powered Data Analytics Job Simulation",
+    issuer: "Tata, via Forage",
+    detail:
+      "Exploratory analysis and risk profiling, predicting delinquency with AI, and an AI-driven collections strategy.",
+  },
+  {
+    when: "Mar 2026",
+    title: "Codeathon at Forge Inspira 2026",
+    issuer: "IIT Hyderabad",
+    detail:
+      "Three days building Hire-scope, an AI agent that reads hiring risk from LinkedIn profiles.",
+  },
+];
 
 const projects: Project[] = [
   {
@@ -326,6 +370,28 @@ function scrollToSection(sectionId: string) {
   document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+/**
+ * Lucide dropped its brand icons, so Pinterest is drawn here. Deliberately an
+ * outline P rather than the official filled swoosh: it has to sit beside the
+ * lucide Linkedin and Instagram marks without looking like a different set.
+ */
+function PinterestIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <path d="M9.5 17 V7.5 h3.2 a2.75 2.75 0 0 1 0 5.5 H9.5" />
+    </svg>
+  );
+}
+
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -387,8 +453,8 @@ export default function Home() {
         </button>
 
         <nav className="desktop-nav" aria-label="Primary navigation">
-          <button onClick={() => navigateTo("about")}>About</button>
-          <button onClick={() => navigateTo("features")}>Features</button>
+          <Link href="/about">About</Link>
+          <button onClick={() => navigateTo("recognition")}>Recognition</button>
           <button onClick={() => navigateTo("art")}>Artwork</button>
           <button onClick={() => navigateTo("projects")}>Projects</button>
           <Link href="/blog">Journal</Link>
@@ -409,8 +475,8 @@ export default function Home() {
         </button>
 
         <div className={`mobile-menu ${mobileMenuOpen ? "is-open" : ""}`}>
-          <button onClick={() => navigateTo("about")}>About me</button>
-          <button onClick={() => navigateTo("features")}>Magazine features</button>
+          <Link href="/about" onClick={() => setMobileMenuOpen(false)}>About me</Link>
+          <button onClick={() => navigateTo("recognition")}>Recognition</button>
           <button onClick={() => navigateTo("art")}>Artwork archive</button>
           <button onClick={() => navigateTo("projects")}>Project notebook</button>
           <Link href="/blog" onClick={() => setMobileMenuOpen(false)}>Journal</Link>
@@ -431,7 +497,7 @@ export default function Home() {
             I am <strong>Maimuna Afrah</strong>, an artist and AI & ML student exploring what happens when handmade feeling meets thoughtful technology.
           </p>
           <div className="hero-actions">
-            <button className="ink-button" onClick={() => navigateTo("features")}>
+            <button className="ink-button" onClick={() => navigateTo("art")}>
               Enter the archive <ArrowDownRight aria-hidden="true" />
             </button>
             {/* Same button family as "Enter the archive" -- same size, type and
@@ -464,88 +530,13 @@ export default function Home() {
             <strong>art / code / curiosity</strong>
           </div>
         </motion.div>
-        <button className="hero-scroll-cue" onClick={() => navigateTo("features")} aria-label="Scroll to featured work">
+        <button className="hero-scroll-cue" onClick={() => navigateTo("recognition")} aria-label="Scroll to recognition">
           <span>scroll to wander</span>
           <ArrowDownRight aria-hidden="true" />
         </button>
       </section>
 
-      <section className="about-section section-anchor" id="about">
-        <div className="section-marker"><span>01</span><i>About the maker</i></div>
-        <motion.div
-          className="about-grid"
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-          variants={revealStagger}
-        >
-          <motion.div className="about-title" variants={revealChild}>
-            <p className="eyebrow">A practice in two languages</p>
-            <h2>Making room for <em>feeling</em> in the systems we build.</h2>
-          </motion.div>
-          <motion.div className="about-copy" variants={revealChild}>
-            <p>
-              I am a B.Tech AI &amp; ML student at SCETW, Hyderabad, working at the meeting point of visual storytelling and emerging technology. My art is where I listen closely; my code is where I turn that attention into tools and experiences.
-            </p>
-            <p>
-              From watercolour and graphite to multilingual AI and small creative interfaces, I am building a practice that is both curious and human.
-            </p>
-            <a className="text-action" href="https://www.instagram.com/just_m.trying/" target="_blank" rel="noreferrer">
-              Find the everyday sketches <ArrowUpRight aria-hidden="true" />
-            </a>
-          </motion.div>
-        </motion.div>
-        {/* The ink-constellation background art was never exported from Manus and
-            is not on disk anywhere. Restore this line once the file exists at
-            client/public/images/ink-constellation.jpg -- it is purely decorative
-            (13% opacity, aria-hidden), so the section reads fine without it. */}
-        {/* <img className="about-constellation" src="/images/ink-constellation.jpg" alt="" aria-hidden="true" /> */}
-      </section>
-
-      {/* The one piece of writing on the site that is Maimuna's own rather than
-          drafted for her. It sits here, straight after About and before the
-          artwork, because it explains the butterfly a visitor is about to meet
-          everywhere -- the mark, the page turn, and half the drawings. */}
-      <section className="essay-section section-anchor" id="butterflies">
-        <motion.div
-          className="essay-inner"
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-          variants={revealUp}
-        >
-          <div className="section-marker"><span>02</span><i>Why butterflies</i></div>
-          <h2>Why a <em>butterfly.</em></h2>
-          <div className="essay-body">
-            <p>
-              As a child, I have always associated myself with butterflies, finding
-              them rather captivating and interesting. I love to draw them spreading
-              their wings as high as they can.
-            </p>
-            <p>
-              The question arises: why? Why do I love them? Why do I associate myself
-              with them?
-            </p>
-            <p>
-              Freedom has always been symbolised by a bird. For me, it was this tiny
-              insect.
-            </p>
-            <p>
-              The answer to those whys was simple. Their lives before were so simple,
-              yet devoid of colour: no freedom to spread their wings, no freedom from
-              the sickness of discrimination and societal standards.
-            </p>
-            <p>
-              Yet when the worm finally got to rest, and finally became indifferent to
-              its surroundings, it shone brighter than ever.{" "}
-              <em>Because it was in the process of becoming free.</em>
-            </p>
-          </div>
-        </motion.div>
-        <img className="essay-mark" src="/images/butterfly-mark.png" alt="" aria-hidden="true" />
-      </section>
-
-      <section className="feature-section section-anchor" id="features">
+      <section className="feature-section section-anchor" id="recognition">
         <motion.div
           className="feature-intro"
           initial="hidden"
@@ -553,11 +544,12 @@ export default function Home() {
           viewport={viewportOnce}
           variants={revealUp}
         >
-          <div className="section-marker"><span>03</span><i>Selected press</i></div>
-          <p className="eyebrow">As seen in HashtagKalakar</p>
-          <h2>Three pages from a growing <em>visual voice.</em></h2>
+          <div className="section-marker"><span>01</span><i>Recognition</i></div>
+          <p className="eyebrow">In print, and in build</p>
+          <h2>Work that travelled past <em>the desk.</em></h2>
           <p>
-            Recent magazine features that carried my work beyond the sketchbook. Each one is a small record of experimentation, emotion, and line.
+            Magazine features that carried the drawings beyond the sketchbook, and
+            the hackathons and programmes behind the code.
           </p>
         </motion.div>
         <motion.div
@@ -582,6 +574,26 @@ export default function Home() {
             </motion.article>
           ))}
         </motion.div>
+
+        <motion.div
+          className="credential-list"
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
+          variants={revealStagger}
+        >
+          <h3 className="credential-heading">On the technical side</h3>
+          {credentials.map((credential) => (
+            <motion.div className="credential" key={credential.title} variants={revealChild}>
+              <span className="credential-when">{credential.when}</span>
+              <span className="credential-body">
+                <strong>{credential.title}</strong>
+                <em>{credential.issuer}</em>
+                <span>{credential.detail}</span>
+              </span>
+            </motion.div>
+          ))}
+        </motion.div>
       </section>
 
       <section className="art-section section-anchor" id="art">
@@ -593,7 +605,7 @@ export default function Home() {
           variants={revealUp}
         >
           <div>
-            <div className="section-marker"><span>04</span><i>Artwork archive</i></div>
+            <div className="section-marker"><span>02</span><i>Artwork archive</i></div>
             <p className="eyebrow">Original works</p>
             <h2>Small worlds, <em>drawn close.</em></h2>
           </div>
@@ -649,7 +661,7 @@ export default function Home() {
           viewport={viewportOnce}
           variants={revealUp}
         >
-          <div className="section-marker"><span>05</span><i>Project notebook</i></div>
+          <div className="section-marker"><span>03</span><i>Project notebook</i></div>
           <p className="eyebrow">Creative technology</p>
           <h2>Ideas that want to become <em>useful.</em></h2>
           <p className="projects-intro">
@@ -724,7 +736,7 @@ export default function Home() {
           viewport={viewportOnce}
           variants={revealUp}
         >
-          <div className="section-marker"><span>06</span><i>Start a conversation</i></div>
+          <div className="section-marker"><span>04</span><i>Start a conversation</i></div>
           <p className="eyebrow">Let’s make something attentive</p>
           <h2>Have a thought worth <em>drawing out?</em></h2>
           <p>
@@ -747,6 +759,14 @@ export default function Home() {
               <span>
                 <strong>See the sketches on Instagram</strong>
                 <em>@just_m.trying</em>
+              </span>
+              <ArrowUpRight aria-hidden="true" />
+            </a>
+            <a className="social-card" href="https://in.pinterest.com/justmtrying/" target="_blank" rel="noreferrer">
+              <PinterestIcon />
+              <span>
+                <strong>Browse the boards on Pinterest</strong>
+                <em>@justmtrying</em>
               </span>
               <ArrowUpRight aria-hidden="true" />
             </a>

@@ -30,6 +30,7 @@ const NOTFOUND = read("client/src/pages/NotFound.tsx");
 const APP = read("client/src/App.tsx");
 const INDEX_HTML = read("client/index.html");
 const POSTS = read("client/src/content/posts.ts");
+const ABOUT = read("client/src/pages/About.tsx");
 
 /**
  * Drop comments before asserting on source. Comments legitimately contain the
@@ -144,13 +145,16 @@ describe("contact details", () => {
     const contact = HOME.slice(HOME.indexOf('id="contact"'));
     expect(contact).toMatch(/linkedin\.com/);
     expect(contact).toMatch(/instagram\.com/);
+    expect(contact).toMatch(/pinterest\.com/);
   });
 });
 
 describe("routing", () => {
-  it("registers the /blog route", () => {
+  it("registers the /blog and /about routes", () => {
     expect(APP).toMatch(/path="\/blog"/);
     expect(APP).toMatch(/import Blog from/);
+    expect(APP).toMatch(/path="\/about"/);
+    expect(APP).toMatch(/import About from/);
   });
 
   it("has a Vercel rewrite so deep links do not 404", () => {
@@ -214,6 +218,7 @@ describe("prose", () => {
       ["Home", stripComments(HOME)],
       ["Blog", stripComments(BLOG)],
       ["NotFound", stripComments(NOTFOUND)],
+      ["About", stripComments(ABOUT)],
       ["posts", stripComments(POSTS)],
       ["index.html", INDEX_HTML.replace(/<!--[\s\S]*?-->/g, "")],
     ] as const) {
@@ -221,18 +226,54 @@ describe("prose", () => {
     }
   });
 
-  it("numbers the home page sections in order with no gaps", () => {
-    // Inserting the butterflies section pushed every later number along by one.
-    const numbers = [...HOME.matchAll(/<span>(\d{2})<\/span><i>/g)].map(m => Number(m[1]));
-    expect(numbers.length).toBeGreaterThanOrEqual(6);
-    expect(numbers).toEqual(numbers.map((_, i) => i + 1));
+  it("numbers each page's sections in order with no gaps", () => {
+    // Moving About and the essay to /about renumbered what was left behind.
+    const numbering = (source: string) =>
+      [...source.matchAll(/<span>(\d{2})<\/span><i>/g)].map(m => Number(m[1]));
+
+    for (const [name, source, least] of [
+      ["Home", HOME, 4],
+      ["About", ABOUT, 2],
+    ] as const) {
+      const numbers = numbering(source);
+      expect(numbers.length, `${name} section count`).toBeGreaterThanOrEqual(least);
+      expect(numbers, `${name} numbering`).toEqual(numbers.map((_, i) => i + 1));
+    }
   });
 
-  it("keeps the butterfly piece on the home page", () => {
-    // The one piece of writing here that is hers rather than drafted for her.
-    expect(HOME).toMatch(/id="butterflies"/);
-    expect(HOME).toMatch(/Freedom has always been symbolised by a bird/);
-    expect(HOME).toMatch(/in the process of becoming free/);
+  it("keeps the butterfly piece, now on /about", () => {
+    // The one piece of writing on the site that is hers rather than drafted
+    // for her. It moved off the home page so a visitor reaches the work first.
+    expect(ABOUT).toMatch(/id="butterflies"/);
+    expect(ABOUT).toMatch(/Freedom has always been symbolised by a bird/);
+    expect(ABOUT).toMatch(/in the process of becoming free/);
+    expect(HOME, "the essay should no longer be on the home page").not.toMatch(
+      /Freedom has always been symbolised by a bird/
+    );
+  });
+
+  it("states credentials without inflating them", () => {
+    // Every one of these came off a certificate. Participation must not be
+    // written up as a placing.
+    const block = section(HOME, "const credentials = [", "const projects");
+    expect(block).toMatch(/Tata, via Forage/);
+    expect(block).toMatch(/Wadhwani Foundation/);
+    expect(block).toMatch(/Forge Alumnus Services/);
+    expect(block).toMatch(/IIT Hyderabad/);
+    // the blank Design-a-thon template and the one-hour workshop stay out
+    expect(block).not.toMatch(/Design-a-thon/i);
+    expect(block).not.toMatch(/Canva/i);
+  });
+
+  it("puts recognition first on the home page", () => {
+    // The whole reason About moved: accomplishments should not sit behind two
+    // long prose sections.
+    const recognition = HOME.indexOf('id="recognition"');
+    const art = HOME.indexOf('id="art"');
+    const projects = HOME.indexOf('id="projects"');
+    expect(recognition).toBeGreaterThan(-1);
+    expect(recognition).toBeLessThan(art);
+    expect(art).toBeLessThan(projects);
   });
 });
 
@@ -321,6 +362,9 @@ describe("page transition", () => {
       expect(source, `${name} should use ButterflyLink`).toMatch(
         /import \{ ButterflyLink as Link \}/
       );
+    }
+    expect(ABOUT).toMatch(/import \{ ButterflyLink as Link \}/);
+    {
     }
   });
 });

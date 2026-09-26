@@ -65,6 +65,7 @@ export default function Blog() {
 
         <nav className="desktop-nav" aria-label="Primary navigation">
           <Link href="/">Portfolio</Link>
+          <Link href="/about">About</Link>
           <Link href="/blog" aria-current="page" className="is-current">Journal</Link>
         </nav>
 
@@ -84,6 +85,7 @@ export default function Blog() {
 
         <div className={`mobile-menu ${mobileMenuOpen ? "is-open" : ""}`}>
           <Link href="/" onClick={() => setMobileMenuOpen(false)}>Portfolio</Link>
+          <Link href="/about" onClick={() => setMobileMenuOpen(false)}>About</Link>
           <Link href="/#art" onClick={() => setMobileMenuOpen(false)}>Artwork archive</Link>
           <Link href="/#projects" onClick={() => setMobileMenuOpen(false)}>Project notebook</Link>
           <Link href="/#contact" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
