@@ -129,11 +129,11 @@ const artwork: Artwork[] = [
     alt: "Black and red ink artwork titled The Cut that Always Bleeds",
   },
   {
-    // PLACEHOLDER TITLE. This card said "Tokyo Ghoul" but pointed at the Jab We
-    // Met drawing, and there is no Tokyo Ghoul piece in the archive. It now
-    // holds the watercolour you filed as "watercolour boy - heart". Rename it.
+    // This card used to say "Tokyo Ghoul" while pointing at the Jab We Met
+    // drawing. There is no Tokyo Ghoul piece in the archive; this is the
+    // watercolour filed as "watercolour boy - heart", now titled by Maimuna.
     // (span: "wide" was dropped -- that crop is 1.55:1 and this image is portrait.)
-    title: "Heart in Hand",
+    title: "Loverboy",
     category: "fanart",
     medium: "Watercolour & ink",
     image: "/images/watercolour-heart.jpeg",
@@ -162,15 +162,16 @@ const artwork: Artwork[] = [
     span: "tall",
   },
   {
-    title: "Warrior Study",
+    title: "The Lady Warrior",
     category: "pencil",
     medium: "Graphite study",
     image: "/images/warrior-pencil.jpeg",
     alt: "Detailed graphite drawing of a warrior holding a sword",
   },
   {
-    // Titles below are Claude's suggestions where the artwork does not letter
-    // its own name. Rename freely -- nothing else depends on them.
+    // Most titles here are Maimuna's. Still Claude's suggestions, pending her
+    // own: "Every Life We Touch" and "Ballpoint Study". Rename freely --
+    // nothing else depends on them.
     title: "Ramadan Mubarak",
     category: "lettering",
     medium: "Brush pen & gouache",
@@ -200,7 +201,7 @@ const artwork: Artwork[] = [
     alt: "Skeletal hand in purple surrounded by drawn butterflies and handwritten lines about passing through darkness and still becoming beautiful",
   },
   {
-    title: "A Heart of Bone",
+    title: "Love You",
     category: "ink",
     medium: "Ballpoint pen",
     image: "/images/heart-of-bone.jpeg",
@@ -221,11 +222,11 @@ const artwork: Artwork[] = [
     alt: "Marker illustration of Belle in a blue dress beside a tall red rose, lettered with the words until the last petal falls",
   },
   {
-    title: "Drawn From the Screen",
+    title: "Sukuna",
     category: "fanart",
-    medium: "Ink study",
-    image: "/images/drawn-from-the-screen.jpeg",
-    alt: "Ink drawing in progress on a sketchpad beside a phone showing the scene being drawn from",
+    medium: "Ink fan art",
+    image: "/images/sukuna.jpeg",
+    alt: "Ink fan art of Sukuna from Jujutsu Kaisen, drawn on a sketchpad beside a phone showing the scene it was drawn from",
     span: "wide",
   },
 ];
