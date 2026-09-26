@@ -142,6 +142,19 @@ describe("contact details", () => {
     expect(email).toMatch(/^[^@\s]+@[^@\s]+\.(com|org|net|io|dev|in)$/);
   });
 
+  it("never renders the personal address on the page", () => {
+    // It used to print in full, where any harvester could take it. The form
+    // delivers instead, so the address only has to exist for the mailto
+    // fallback -- never in the markup.
+    const contact = HOME.slice(HOME.indexOf('id="contact"'));
+    expect(contact, "the address must not be printed as text").not.toMatch(
+      /\{contactEmail\}/
+    );
+    expect(contact, "no visible mailto link either").not.toMatch(
+      /href=\{`mailto:/
+    );
+  });
+
   it("offers LinkedIn and Instagram in the contact section", () => {
     const contact = HOME.slice(HOME.indexOf('id="contact"'));
     expect(contact).toMatch(/linkedin\.com/);
@@ -175,7 +188,8 @@ describe("contact form", () => {
     // and the error state has to give the visitor somewhere else to go
     const form = section(HOME, 'className="form-status"', "</motion.form>");
     expect(form).toMatch(/is-error/);
-    expect(form).toMatch(/mailto:\$\{contactEmail\}/);
+    expect(form).toMatch(/linkedin\.com/);
+    expect(form).toMatch(/instagram\.com/);
   });
 
   it("reports sending, and cannot be double-submitted", () => {

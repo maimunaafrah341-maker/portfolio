@@ -384,6 +384,12 @@ const CONTACT_FORM_ENDPOINT = "";
 
 type SendState = "idle" | "sending" | "sent" | "error";
 
+/**
+ * Never rendered. It exists only to address the mailto fallback used while
+ * CONTACT_FORM_ENDPOINT is empty, and a harvester scraping the page finds
+ * nothing. Once the Formspree endpoint is set, delete this and the fallback
+ * block in handleContact with it.
+ */
 const contactEmail = "just.m.trying@gmail.com";
 
 function scrollToSection(sectionId: string) {
@@ -816,11 +822,6 @@ export default function Home() {
               <ArrowUpRight aria-hidden="true" />
             </a>
           </div>
-          <div className="contact-links">
-            <a className="contact-email" href={`mailto:${contactEmail}`}>
-              <Mail aria-hidden="true" /> {contactEmail} <ArrowUpRight aria-hidden="true" />
-            </a>
-          </div>
           <img className="contact-art" src="/images/contact-stamp.jpg" alt="Ink-drawn envelope opening into a butterfly" />
         </motion.div>
         <motion.form
@@ -866,7 +867,7 @@ export default function Home() {
             <Mail aria-hidden="true" />
             {CONTACT_FORM_ENDPOINT
               ? "Your note comes straight to my inbox, and I reply from there."
-              : "Submitting opens your email app with a prefilled note addressed to Maimuna."}
+              : "Submitting opens your email app with a prefilled note to Maimuna."}
           </p>
 
           {/* Kept mounted so a screen reader announces the change rather than
@@ -879,9 +880,15 @@ export default function Home() {
             )}
             {sendState === "error" && (
               <p className="form-notice is-error">
-                That did not send. Please email me directly at{" "}
-                <a href={`mailto:${contactEmail}`}>{contactEmail}</a>, and I will
-                pick it up there.
+                That did not send. Please reach me on{" "}
+                <a href="https://www.linkedin.com/in/maimuna-afrah-2b41b63a0" target="_blank" rel="noreferrer">
+                  LinkedIn
+                </a>{" "}
+                or{" "}
+                <a href="https://www.instagram.com/just_m.trying/" target="_blank" rel="noreferrer">
+                  Instagram
+                </a>{" "}
+                instead, and I will pick it up there.
               </p>
             )}
           </div>
