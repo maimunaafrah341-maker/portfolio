@@ -365,32 +365,15 @@ const filters: Array<{ id: ArtCategory; label: string }> = [
 ];
 
 /**
- * Where the contact form posts.
+ * Where the contact form posts. Formspree forwards each submission to
+ * Maimuna's inbox, so her address appears neither on the page nor anywhere in
+ * this bundle, and a harvester crawling the site finds nothing to take.
  *
- * WHILE THIS IS EMPTY the form falls back to opening the visitor's mail app,
- * which is what it always did, and which silently does nothing for anyone
- * without a mail client set up. On a phone browser or a locked-down work
- * laptop, pressing send just does not work, and nobody finds out.
- *
- * To make it deliver for real:
- *   1. Make a free form at https://formspree.io (50 messages a month)
- *   2. It gives you an endpoint like https://formspree.io/f/abcdwxyz
- *   3. Paste it between the quotes below, commit, push. That is the whole job.
- *
- * The endpoint is meant to be public, so there is no secret here to protect.
- * Web3Forms works too, but it also wants a hidden `access_key` input.
+ * The endpoint is public by design. There is no secret in it.
  */
-const CONTACT_FORM_ENDPOINT = "";
+const CONTACT_FORM_ENDPOINT = "https://formspree.io/f/xgavndol";
 
 type SendState = "idle" | "sending" | "sent" | "error";
-
-/**
- * Never rendered. It exists only to address the mailto fallback used while
- * CONTACT_FORM_ENDPOINT is empty, and a harvester scraping the page finds
- * nothing. Once the Formspree endpoint is set, delete this and the fallback
- * block in handleContact with it.
- */
-const contactEmail = "just.m.trying@gmail.com";
 
 function scrollToSection(sectionId: string) {
   document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -454,19 +437,6 @@ export default function Home() {
 
     // Honeypot. People never see this field, so anything in it is a bot.
     if (values.get("company")) return;
-
-    if (!CONTACT_FORM_ENDPOINT) {
-      const name = String(values.get("name") ?? "");
-      const senderEmail = String(values.get("email") ?? "");
-      const message = String(values.get("message") ?? "");
-      const subject = `Portfolio enquiry from ${name}`;
-      const body = `Hello Maimuna,\n\n${message}\n\nFrom: ${name}\nReply to: ${senderEmail}`;
-
-      window.location.href = `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      form.reset();
-      setSendState("sent");
-      return;
-    }
 
     setSendState("sending");
     try {
@@ -865,9 +835,7 @@ export default function Home() {
 
           <p className="form-caption">
             <Mail aria-hidden="true" />
-            {CONTACT_FORM_ENDPOINT
-              ? "Your note comes straight to my inbox, and I reply from there."
-              : "Submitting opens your email app with a prefilled note to Maimuna."}
+            Your note comes straight to my inbox, and I reply from there.
           </p>
 
           {/* Kept mounted so a screen reader announces the change rather than

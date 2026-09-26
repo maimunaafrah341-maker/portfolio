@@ -135,12 +135,10 @@ describe("projects", () => {
 });
 
 describe("contact details", () => {
-  it("uses a well-formed email address", () => {
-    // A ".con" typo lived here for a long time and silently ate every message.
-    const email = HOME.match(/const contactEmail = "([^"]+)"/)?.[1];
-    expect(email).toBeDefined();
-    expect(email).toMatch(/^[^@\s]+@[^@\s]+\.(com|org|net|io|dev|in)$/);
-  });
+  // The old check for a malformed address is gone with the address itself.
+  // A ".con" typo once sat in this file and silently ate every message; the
+  // destination now lives in the Formspree dashboard, and "contact form >
+  // has a real endpoint configured" guards what is left in the source.
 
   it("never renders the personal address on the page", () => {
     // It used to print in full, where any harvester could take it. The form
@@ -173,11 +171,20 @@ describe("contact form", () => {
     expect(handler).toMatch(/method: "POST"/);
   });
 
-  it("still works before the endpoint is configured", () => {
-    // CONTACT_FORM_ENDPOINT ships empty, so the old mailto path has to remain
-    // as the fallback rather than the form doing nothing at all.
-    expect(handler).toMatch(/if \(!CONTACT_FORM_ENDPOINT\)/);
-    expect(handler).toMatch(/mailto:\$\{contactEmail\}/);
+  it("has a real endpoint configured", () => {
+    // An empty endpoint used to mean a silent mailto fallback. Now that a live
+    // Formspree form is wired in, an empty value would mean the form posts
+    // nowhere at all, so it must never go back to being blank.
+    const endpoint = HOME.match(/const CONTACT_FORM_ENDPOINT = "([^"]*)"/)?.[1];
+    expect(endpoint).toBeTruthy();
+    expect(endpoint).toMatch(/^https:\/\//);
+  });
+
+  it("keeps the personal address out of the source entirely", () => {
+    // Not just off the page: the mailto fallback is gone, so the address has
+    // no reason to sit in the bundle either.
+    expect(HOME).not.toMatch(/@gmail\.com/);
+    expect(HOME).not.toMatch(/contactEmail/);
   });
 
   it("never swallows a send failure", () => {
