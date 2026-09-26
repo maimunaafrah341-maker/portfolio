@@ -26,7 +26,7 @@ import { motion } from "framer-motion";
 import { ButterflyLink as Link } from "@/components/PageTransition";
 import { revealChild, revealStagger, revealUp, viewportOnce } from "@/lib/motion";
 
-type ArtCategory = "all" | "watercolour" | "islamic" | "fanart" | "pencil" | "ink";
+type ArtCategory = "all" | "watercolour" | "islamic" | "fanart" | "pencil" | "ink" | "lettering";
 
 type Artwork = {
   title: string;
@@ -168,6 +168,66 @@ const artwork: Artwork[] = [
     image: "/images/warrior-pencil.jpeg",
     alt: "Detailed graphite drawing of a warrior holding a sword",
   },
+  {
+    // Titles below are Claude's suggestions where the artwork does not letter
+    // its own name. Rename freely -- nothing else depends on them.
+    title: "Ramadan Mubarak",
+    category: "lettering",
+    medium: "Brush pen & gouache",
+    image: "/images/ramadan-mubarak.jpeg",
+    alt: "Brush lettering reading Ramadan Mubarak in green, above a crescent moon of roses and gold lanterns",
+  },
+  {
+    title: "Swans",
+    category: "lettering",
+    medium: "Oil pastel & ink lettering",
+    image: "/images/swans.jpeg",
+    alt: "Two white swans facing each other on a blue oil-pastel lake, with the word Swans lettered in script below",
+    span: "wide",
+  },
+  {
+    title: "Palestine",
+    category: "lettering",
+    medium: "Poster paint & ink",
+    image: "/images/palestine.jpeg",
+    alt: "Painting of the Palestinian flag with a fork at its centre and the words Palestine is not starving, it is being starved",
+  },
+  {
+    title: "Every Life We Touch",
+    category: "ink",
+    medium: "Ink, marker & acrylic",
+    image: "/images/every-life-we-touch.jpeg",
+    alt: "Skeletal hand in purple surrounded by drawn butterflies and handwritten lines about passing through darkness and still becoming beautiful",
+  },
+  {
+    title: "A Heart of Bone",
+    category: "ink",
+    medium: "Ballpoint pen",
+    image: "/images/heart-of-bone.jpeg",
+    alt: "Ballpoint drawing of two skeletal hands meeting to form a heart",
+  },
+  {
+    title: "Ballpoint Study",
+    category: "ink",
+    medium: "Ballpoint pen",
+    image: "/images/ballpoint-study.jpeg",
+    alt: "Ballpoint pen portrait of a woman glancing back over her shoulder",
+  },
+  {
+    title: "Until the Last Petal Falls",
+    category: "fanart",
+    medium: "Marker, ink & gold pen",
+    image: "/images/until-the-last-petal-falls.jpeg",
+    alt: "Marker illustration of Belle in a blue dress beside a tall red rose, lettered with the words until the last petal falls",
+  },
+  {
+    title: "Drawn From the Screen",
+    category: "fanart",
+    medium: "Ink study",
+    image: "/images/drawn-from-the-screen.jpeg",
+    alt: "Ink drawing in progress on a sketchpad beside a phone showing the scene being drawn from",
+    span: "wide",
+  },
 ];
 
 type Project = {
@@ -256,6 +316,7 @@ const filters: Array<{ id: ArtCategory; label: string }> = [
   { id: "fanart", label: "Fan art" },
   { id: "pencil", label: "Pencil studies" },
   { id: "ink", label: "Ink & marker" },
+  { id: "lettering", label: "Lettering" },
 ];
 
 const contactEmail = "just.m.trying@gmail.com";
