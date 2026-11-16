@@ -282,6 +282,18 @@ h1, h2, h3 { font-family: "DM Serif Display", Georgia, serif; font-weight: 400; 
 .project-row.is-private:hover { margin: 0; padding-right: 0; padding-left: 0; background: transparent; }
 .project-row.is-private > svg { color: var(--ink-soft); opacity: 0.48; }
 .project-row.is-private:hover > svg { transform: none; }
+/* Stretched link: the title's ::after covers the whole row, so the row is still
+   one click target; the video link sits above it on its own layer. */
+.project-row.is-linked { position: relative; }
+.project-main-link { color: inherit; text-decoration: none; }
+.project-main-link::after { content: ""; position: absolute; inset: 0; }
+.project-main-link:focus-visible { outline: none; }
+.project-main-link:focus-visible::after { outline: 3px solid rgba(13, 107, 103, 0.55); outline-offset: 4px; }
+.project-actions { display: flex !important; flex-wrap: wrap; align-items: center; gap: 6px 16px; margin-top: 3px; }
+.project-actions .project-link-label { margin-top: 0; }
+.project-video-link { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 4px; color: var(--ink-soft); font-size: 0.56rem; font-weight: 800; letter-spacing: 0.11em; text-transform: uppercase; text-decoration: none; transition: color 160ms ease; }
+.project-video-link:hover { color: var(--teal); }
+.project-video-link svg { width: 12px; height: 12px; }
 .projects-content > .text-action { margin-top: 1.8rem; }
 
 .contact-section { display: grid; grid-template-columns: 1fr minmax(400px, 0.82fr); gap: clamp(4rem, 9vw, 11rem); padding: 9rem 7vw; color: #fffdf8; background: var(--ink); }

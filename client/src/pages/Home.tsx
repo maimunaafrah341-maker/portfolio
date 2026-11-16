@@ -16,6 +16,7 @@ import {
   Mail,
   Menu,
   MoveUpRight,
+  PlayCircle,
   Send,
   Sparkles,
   X,
@@ -241,6 +242,8 @@ type Project = {
    */
   href?: string;
   linkLabel?: string;
+  /** A recorded demo, shown as a second link beside the live one. */
+  video?: string;
   /** Small caveat under the link -- a free-tier cold start, a private repo. */
   note?: string;
   featured?: boolean;
@@ -307,6 +310,7 @@ const projects: Project[] = [
     technologies: ["FastAPI", "React", "Gemini + Groq agent", "English / Hindi"],
     href: "https://second-look-ai-1.onrender.com",
     linkLabel: "Open live demo",
+    video: "https://youtu.be/XVTsWrDTm0I",
     note: "Hosted on Render's free tier, so the first visit can take up to a minute while the server wakes up.",
     featured: true,
   },
@@ -359,6 +363,7 @@ const projects: Project[] = [
     technologies: ["Flask", "Groq", "Hindsight agent memory"],
     href: "https://ledgermind-nlj7.onrender.com",
     linkLabel: "Open live demo",
+    video: "https://youtu.be/U5Iua_Y3Ozo",
     note: "Hosted on Render's free tier, so the first visit can take up to a minute while the server wakes up.",
   },
   {
@@ -369,6 +374,7 @@ const projects: Project[] = [
     technologies: ["Flask", "Gemini RAG", "Voice", "Maps"],
     href: "https://raahat-9g7r.onrender.com",
     linkLabel: "Open live demo",
+    video: "https://youtu.be/zD166e7fdb4",
     note: "Hosted on Render's free tier, so the first visit can take up to a minute while the server wakes up.",
   },
   {
@@ -766,7 +772,25 @@ export default function Home() {
                   <span className="project-index">{String(index + 1).padStart(2, "0")}</span>
                   <span className="project-body">
                     <small>{project.kind}</small>
-                    <strong>{project.title}</strong>
+                    {/* For a linked row the title is the link, stretched over the
+                        whole row by CSS, so the row stays one big click target
+                        while the video link can still sit inside it. An <a>
+                        inside an <a> is invalid and browsers split it apart. */}
+                    <strong>
+                      {project.href ? (
+                        <a
+                          className="project-main-link"
+                          href={project.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label={`${project.title}: ${project.linkLabel}`}
+                        >
+                          {project.title}
+                        </a>
+                      ) : (
+                        project.title
+                      )}
+                    </strong>
                     <span>{project.summary}</span>
                     <span className="tech-list">{project.technologies.map((tech) => <em key={tech}>{tech}</em>)}</span>
                     {/* Show the address itself for hosted demos. Skipped for GitHub
@@ -775,7 +799,20 @@ export default function Home() {
                       <span className="project-url">{new URL(project.href).host}</span>
                     )}
                     {project.href && (
-                      <span className="project-link-label">{project.linkLabel} <ArrowUpRight aria-hidden="true" /></span>
+                      <span className="project-actions">
+                        <span className="project-link-label" aria-hidden="true">{project.linkLabel} <ArrowUpRight /></span>
+                        {project.video && (
+                          <a
+                            className="project-video-link"
+                            href={project.video}
+                            target="_blank"
+                            rel="noreferrer"
+                            aria-label={`Watch the ${project.title} demo video`}
+                          >
+                            <PlayCircle aria-hidden="true" /> Watch video
+                          </a>
+                        )}
+                      </span>
                     )}
                     {project.note && (
                       <span className="project-note"><Info aria-hidden="true" />{project.note}</span>
@@ -788,18 +825,15 @@ export default function Home() {
               // no href is not keyboard focusable and announces as plain text,
               // so it would look interactive without being so.
               return project.href ? (
-                <motion.a
-                  className={`project-row ${project.featured ? "featured-project" : ""}`}
-                  href={project.href}
-                  target="_blank"
-                  rel="noreferrer"
+                <motion.div
+                  className={`project-row is-linked ${project.featured ? "featured-project" : ""}`}
                   key={project.title}
                   variants={revealChild}
                   whileHover={{ y: -3, transition: { type: "spring", stiffness: 380, damping: 26 } }}
                 >
                   {body}
                   <ArrowUpRight aria-hidden="true" />
-                </motion.a>
+                </motion.div>
               ) : (
                 <motion.div
                   className={`project-row is-private ${project.featured ? "featured-project" : ""}`}
