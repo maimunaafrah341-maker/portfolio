@@ -255,8 +255,7 @@ type Project = {
  */
 const credentials = [
   {
-    // Month not confirmed yet -- swap "2026" for the month once it is.
-    when: "2026",
+    when: "Oct 2026",
     title: "Best Functional AI",
     issuer: "TechNova 2026",
     detail:
@@ -323,10 +322,10 @@ const projects: Project[] = [
     featured: true,
   },
   {
-    kind: "Data dashboard",
+    kind: "Built for NASA",
     title: "Astraeon",
     summary:
-      "Makes NASA's microgravity combustion experiments easy to explore: filters, rankings, side-by-side comparisons, a Moon-base atmosphere explorer, fire history, and an assistant that answers only from cited NASA data.",
+      "A spacecraft fire-safety dashboard built for NASA. It makes NASA's microgravity combustion experiments easy to explore: filters, rankings, side-by-side comparisons, a Moon-base atmosphere explorer, fire history, and an assistant that answers only from cited NASA data.",
     technologies: ["Python", "Streamlit", "Gemini RAG"],
     href: "https://astraeon-fire.streamlit.app/",
     linkLabel: "Open live demo",
