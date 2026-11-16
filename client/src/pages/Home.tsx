@@ -322,10 +322,10 @@ const projects: Project[] = [
     featured: true,
   },
   {
-    kind: "Built for NASA",
+    kind: "NASA Space Apps Challenge",
     title: "Astraeon",
     summary:
-      "A spacecraft fire-safety dashboard built for NASA. It makes NASA's microgravity combustion experiments easy to explore: filters, rankings, side-by-side comparisons, a Moon-base atmosphere explorer, fire history, and an assistant that answers only from cited NASA data.",
+      "A spacecraft fire-safety dashboard built for the NASA Space Apps Challenge. It makes NASA's microgravity combustion experiments easy to explore: filters, rankings, side-by-side comparisons, a Moon-base atmosphere explorer, fire history, and an assistant that answers only from cited NASA data.",
     technologies: ["Python", "Streamlit", "Gemini RAG"],
     href: "https://astraeon-fire.streamlit.app/",
     linkLabel: "Open live demo",
@@ -381,15 +381,16 @@ const projects: Project[] = [
     linkLabel: "Open live demo",
   },
   {
-    // The repo is still named "hummingbird" -- that was the working name during
-    // Hackwave. The link is correct even though the title no longer matches it.
+    // The repo and deployment are still named "hummingbird" -- that was the
+    // working name during Hackwave. The link is correct even though the title
+    // no longer matches it.
     kind: "Hackathon build",
     title: "HazardWatch OS",
     summary:
       "An industrial safety console that opens an incident the moment a camera sees a hazard and speaks the warning in the bystander's language, built at Hackwave 3.0 and placed top 20 of 126 teams.",
     technologies: ["Python", "FastAPI", "YOLO"],
-    href: "https://github.com/maimunaafrah341-maker/hummingbird",
-    linkLabel: "View source",
+    href: "https://hummingbird-knajsbnw0-maimunaafrah.vercel.app/",
+    linkLabel: "Open live demo",
   },
   {
     kind: "AI agent",
