@@ -13,7 +13,7 @@ Interactive portfolio site combining my artwork with the technical/creative proj
 
 ## What's inside
 - Original ink, watercolor, and marker artwork, including pieces featured in print and fan art
-- A project showcase: Athena, RoleFit, HazardWatch OS, Hire-scope, FF-01-S5, Study with Mimi
+- A project showcase: Second Look (Best Functional AI, TechNova 2026), Athena, Astraeon, Runway, Atlas, LedgerMind, Raahat, RoleFit, HazardWatch OS, Hire-scope, FF-01-S5, Study with Mimi
 - A journal at `/blog` for hackathon results and project launches
 - An About section connecting the art side and the code side
 

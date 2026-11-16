@@ -255,6 +255,14 @@ type Project = {
  */
 const credentials = [
   {
+    // Month not confirmed yet -- swap "2026" for the month once it is.
+    when: "2026",
+    title: "Best Functional AI",
+    issuer: "TechNova 2026",
+    detail:
+      "Won for Second Look, an evidence-grounded assistant that helps people check a suspicious message before they trust it.",
+  },
+  {
     when: "Sept 2026",
     title: "Top 20 of 126 teams",
     issuer: "Hackwave 3.0",
@@ -293,6 +301,17 @@ const credentials = [
 
 const projects: Project[] = [
   {
+    kind: "Award winner · TechNova 2026",
+    title: "Second Look",
+    summary:
+      "Helps people in India pause before they reply to, click or pay a suspicious SMS, WhatsApp message or email. It highlights the exact phrases worth worrying about, links them to official government guidance, and never calls a message safe. Won Best Functional AI at TechNova 2026.",
+    technologies: ["FastAPI", "React", "Gemini + Groq agent", "English / Hindi"],
+    href: "https://second-look-ai-1.onrender.com",
+    linkLabel: "Open live demo",
+    note: "Hosted on Render's free tier, so the first visit can take up to a minute while the server wakes up.",
+    featured: true,
+  },
+  {
     kind: "Active build",
     title: "Athena",
     summary:
@@ -302,6 +321,56 @@ const projects: Project[] = [
     // the repo stays private. Add href + linkLabel back when it is ready.
     note: "Kept private while it is still in development for Smart India Hackathon.",
     featured: true,
+  },
+  {
+    kind: "Data dashboard",
+    title: "Astraeon",
+    summary:
+      "Makes NASA's microgravity combustion experiments easy to explore: filters, rankings, side-by-side comparisons, a Moon-base atmosphere explorer, fire history, and an assistant that answers only from cited NASA data.",
+    technologies: ["Python", "Streamlit", "Gemini RAG"],
+    href: "https://astraeon-fire.streamlit.app/",
+    linkLabel: "Open live demo",
+    note: "Hosted on Streamlit Community Cloud, so an idle app can take a moment to wake up.",
+  },
+  {
+    kind: "Hackathon build · INNOVASIA 2K26",
+    title: "Runway",
+    summary:
+      "A cash-shortfall early warning for small Indian manufacturers. It forecasts the chance of running out of cash in the next 14, 30 and 60 days, names the invoices causing it, and ranks what to do first in rupees.",
+    technologies: ["Python", "Monte Carlo simulation", "Streamlit", "RAG"],
+    href: "https://runwayhi.streamlit.app/",
+    linkLabel: "Open live demo",
+    note: "The first visit after it has been idle takes about 30 seconds while it wakes up and runs 5,000 simulations.",
+  },
+  {
+    kind: "Full-stack commerce",
+    title: "Atlas",
+    summary:
+      "An e-commerce platform for small businesses with AI product discovery, multilingual catalogue search, stock reservations, and server-verified PayPal Sandbox payments with webhooks.",
+    technologies: ["FastAPI", "PostgreSQL", "React", "TypeScript"],
+    href: "https://atlas-uema.onrender.com",
+    linkLabel: "Open live demo",
+    note: "Hosted on Render's free tier, so the first visit can take up to a minute while the server wakes up.",
+  },
+  {
+    kind: "AI agent · HackwithHyderabad 3.0",
+    title: "LedgerMind",
+    summary:
+      "An accounts-payable agent that remembers every vendor, so a disputed surcharge that comes back under a new name, creeping prices, or shrinking payment terms get caught instead of paid.",
+    technologies: ["Flask", "Groq", "Hindsight agent memory"],
+    href: "https://ledgermind-nlj7.onrender.com",
+    linkLabel: "Open live demo",
+    note: "Hosted on Render's free tier, so the first visit can take up to a minute while the server wakes up.",
+  },
+  {
+    kind: "Health · Code for Communities",
+    title: "Raahat",
+    summary:
+      "An emergency care finder for Hyderabad. Describe an injury in Telugu, Hindi, Urdu or English and it ranks nearby hospitals by whether they can actually treat it, then explains Aarogyasri and other entitlements with citations.",
+    technologies: ["Flask", "Gemini RAG", "Voice", "Maps"],
+    href: "https://raahat-9g7r.onrender.com",
+    linkLabel: "Open live demo",
+    note: "Hosted on Render's free tier, so the first visit can take up to a minute while the server wakes up.",
   },
   {
     kind: "AI copilot",
@@ -694,7 +763,7 @@ export default function Home() {
             {projects.map((project, index) => {
               const body = (
                 <>
-                  <span className="project-index">0{index + 1}</span>
+                  <span className="project-index">{String(index + 1).padStart(2, "0")}</span>
                   <span className="project-body">
                     <small>{project.kind}</small>
                     <strong>{project.title}</strong>
